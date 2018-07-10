@@ -1,0 +1,13 @@
+{
+    "name": "React1",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "start": "node node_modules/react-native/local-cli/cli.js start",
+        "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/react01/app/src/main/assets/index.android.bundle --assets-dest android/react01/app/src/main/res/"
+    },
+    "dependencies": {
+        "react": "^16.3.1",
+        "react-native": "^0.55.4"
+    }
+}
