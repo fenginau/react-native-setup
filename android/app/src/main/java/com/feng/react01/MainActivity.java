@@ -1,13 +1,14 @@
 package com.feng.react01;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 
-public class MainActivity extends Activity {
+import com.facebook.react.ReactActivity;
+
+public class MainActivity extends ReactActivity {
 
     private final int OVERLAY_PERMISSION_REQ_CODE = 1;
     @Override
@@ -26,13 +27,13 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.canDrawOverlays(this)) {
-                    // SYSTEM_ALERT_WINDOW permission not granted
-                }
-            }
-        }
+    protected String getMainComponentName() {
+        return "MyReactNativeApp";
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//      MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }
