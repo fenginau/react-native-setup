@@ -1,6 +1,5 @@
 import React from 'react';
-import { AppRegistry, StyleSheet, Text, View } from 'react-native';
-import I18n from '../js/i18n';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default class HomeScreen extends React.Component {
     render() {

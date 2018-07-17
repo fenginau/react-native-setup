@@ -1,5 +1,6 @@
 export default {
     home: 'Home',
     info: 'Info',
-    setting: 'Setting'
+    setting: 'Setting',
+    search: 'Search'
 };

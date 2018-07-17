@@ -4,11 +4,16 @@
     "private": true,
     "scripts": {
         "start": "node node_modules/react-native/local-cli/cli.js start",
-        "bundle": "/C/Users/Feng/AppData/Roaming/npm/react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/"
+        "bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/"
     },
     "dependencies": {
+        "buffer": "^5.1.0",
+        "js-base64": "^2.4.6",
+        "native-base": "^2.7.1",
         "react": "^16.3.1",
         "react-native": "^0.55.4",
+        "react-native-drawer": "^2.5.0",
+        "react-native-elements": "^0.19.1",
         "react-native-i18n": "^2.0.12",
         "react-native-vector-icons": "^4.6.0",
         "react-navigation": "^2.6.2"
