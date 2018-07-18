@@ -16,7 +16,6 @@ export default class KnowledgeBaseScreen extends React.Component {
     }
 
     componentDidMount() {
-        console.log(typeof this.props.navigation);
         this.getKbPropular();
     }
 
@@ -55,11 +54,11 @@ export default class KnowledgeBaseScreen extends React.Component {
                 acceptPan={true}
                 acceptTap={true}
                 panOpenMask={0.05}
-                styles={styles.drawer}
+                styles={drawerStyles}
                 panCloseMask={0.2}
                 captureGestures={true}
                 negotiatePan={true}
-                tweenHandler={(ratio) => ({ main: { opacity: (2 - ratio) / 2 } })}>
+                tweenHandler={(ratio) => ({ mainOverlay: { opacity: (ratio) / 2 } })}>
                 <Container>
                     <Header searchBar rounded>
                         <Item>
@@ -80,6 +79,8 @@ export default class KnowledgeBaseScreen extends React.Component {
         );
     }
 }
-var styles = StyleSheet.create({
+
+const drawerStyles = {
     drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
-});
+    mainOverlay: { backgroundColor: '#000000', opacity: 0 }
+}

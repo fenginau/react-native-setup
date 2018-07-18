@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { Content, Text, Accordion, List, ListItem, Left, Right, Icon } from 'native-base';
 import Rest from '../js/rest';
 
@@ -85,8 +85,20 @@ export default class KbSidebar extends React.Component {
     render() {
         return (
             <Content padder>
-                <Accordion dataArray={this.state.menu} renderContent={(content) => this.createNavList(content, this.props.navigation)} expanded={0} />
+                <Accordion 
+                    dataArray={this.state.menu} 
+                    renderContent={(content) => this.createNavList(content, this.props.navigation)} 
+                    expanded={0}
+                    headerStyle={styles.AccordionHeader}
+                    contentStyle={styles.AccordionContent}
+                    style={styles.Accordion} />
             </Content>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    Accordion: { borderWidth: 0, },
+    AccordionHeader: { margin: 5, backgroundColor: '#ececec' },
+    AccordionContent: { backgroundColor: '#fafafa', paddingLeft: 20, paddingRight: 20, },
+});

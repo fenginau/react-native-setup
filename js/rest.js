@@ -20,4 +20,5 @@ export default class Rest extends React.Component {
     static getKbPopular(index, interval) {
         return this.get(`knowledgebaseapi/getKnowledgebasePopular/${Global.hardwareId}/${index}/${interval}`);
     }
+
 }

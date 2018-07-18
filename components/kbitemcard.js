@@ -1,8 +1,16 @@
 import React from 'react';
 import { Image } from 'react-native';
 import { Icon, Button, Text, Card, CardItem, Thumbnail, Left, Body } from 'native-base';
+import Rest from '../js/rest';
 
 export default class KbItemCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            image: null
+        };
+    }
+
     render() {
         return (
             <Card style={{ flex: 0 }}>
