@@ -10,6 +10,14 @@ export default class KbItemCard extends React.Component {
             image: null
         };
     }
+    
+    componentDidMount() {
+        Rest.getKbTitleImage(this.props.item.headerImageId).then((result) => {
+            this.setState({ image: result })
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
 
     render() {
         return (
@@ -25,7 +33,7 @@ export default class KbItemCard extends React.Component {
                 </CardItem>
                 <CardItem>
                     <Body>
-                        <Image source={{ uri: 'https://pic3.zhimg.com/50/v2-596d7e85d09d32ac0450a1c778cfa276_hd.jpg' }} style={{ height: 200, width: '100%', flex: 1 }} />
+                        <Image source={{ uri: this.state.image }} style={{ height: 200, width: '100%', flex: 1 }} />
                         <Text>
                             {this.props.item.blurb}
                         </Text>

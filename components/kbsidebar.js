@@ -1,13 +1,15 @@
 import React from 'react';
 import { Alert, StyleSheet } from 'react-native';
-import { Content, Text, Accordion, List, ListItem, Left, Right, Icon } from 'native-base';
+import { Content, Text, Accordion, List, ListItem, Left, Right, Icon, View } from 'native-base';
 import Rest from '../js/rest';
 
 export default class KbSidebar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            menu: []
+            menu: [],
+            expanded: null,
+            loaded: false
         };
         this.getMenu();
     }
@@ -22,6 +24,7 @@ export default class KbSidebar extends React.Component {
 
     buildMenu(rawMenu) {
         var menu = [];
+        var subIndex = -1;
         if (rawMenu.length > 0) {
             // sort the raw data first
             rawMenu.sort((x, y) => {
@@ -53,6 +56,13 @@ export default class KbSidebar extends React.Component {
                         menu.push(tempSub);
                     }
                     tempSub = { title: e.title, content: [] };
+                    subIndex++;
+                }
+                if (e.itemId == this.props.item) {
+                    this.setState({ expanded: subIndex });
+                    e.selected = true;
+                } else {
+                    e.selected = false;
                 }
                 tempList.push(e);
             });
@@ -62,14 +72,17 @@ export default class KbSidebar extends React.Component {
                 menu.push(tempSub);
             }
         }
-        this.setState({ menu: menu });
+        this.setState({ menu: menu, loaded: true });
     }
 
     createNavList(listItems, navigation) {
         return (
             <List dataArray={listItems}
                 renderRow={(item) =>
-                    <ListItem onPress={() => navigation.navigate('KnowledgeItem', {itemId: item.itemId})}>
+                    <ListItem selected={item.selected}
+                        onPress={() => navigation.push('KnowledgeItem', {
+                            itemId: item.itemId
+                        })}>
                         <Left>
                             <Text>{item.title}</Text>
                         </Left>
@@ -83,17 +96,23 @@ export default class KbSidebar extends React.Component {
     }
 
     render() {
-        return (
-            <Content padder>
-                <Accordion 
-                    dataArray={this.state.menu} 
-                    renderContent={(content) => this.createNavList(content, this.props.navigation)} 
-                    expanded={0}
-                    headerStyle={styles.AccordionHeader}
-                    contentStyle={styles.AccordionContent}
-                    style={styles.Accordion} />
-            </Content>
-        );
+        console.log(this.state.expanded);
+        if (this.state.loaded) {
+            return (
+                <Content padder>
+                    <Accordion
+                        ref={(ref) => this.accordion = ref}
+                        dataArray={this.state.menu}
+                        renderContent={(content) => this.createNavList(content, this.props.navigation)}
+                        expanded={this.state.expanded}
+                        headerStyle={styles.AccordionHeader}
+                        contentStyle={styles.AccordionContent}
+                        style={styles.Accordion} />
+                </Content>
+            );
+        } else {
+            return (<View><Text>Loading...</Text></View>);
+        }
     }
 }
 
