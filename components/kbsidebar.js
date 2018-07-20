@@ -58,13 +58,15 @@ export default class KbSidebar extends React.Component {
                     tempSub = { title: e.title, content: [] };
                     subIndex++;
                 }
-                if (e.itemId == this.props.item) {
+                if (e.itemId == this.props.item && e.itemId > 0) {
                     this.setState({ expanded: subIndex });
                     e.selected = true;
                 } else {
                     e.selected = false;
                 }
-                tempList.push(e);
+                if (e.itemId > 0){
+                    tempList.push(e);
+                }
             });
             if (tempList.length > 0) {
                 tempSub.content = [...tempList];
@@ -96,7 +98,6 @@ export default class KbSidebar extends React.Component {
     }
 
     render() {
-        console.log(this.state.expanded);
         if (this.state.loaded) {
             return (
                 <Content padder>

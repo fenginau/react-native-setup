@@ -35,4 +35,8 @@ export default class Rest extends React.Component {
     static getKbTitleImage(fileId) {
         return this.get(`knowledgebaseapi/getKnowledgebaseTitleImageUrl/${fileId}`);
     }
+
+    static getKbItem(itemId) {
+        return this.get(`knowledgebaseapi/getknowledgebaseSingle/${Global.hardwareId}/${itemId}`);
+    }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, FlatList, Image } from 'react-native';
-import { Container, Header, Item, Input, Icon, Button, Text, Toast, Left, Body, View } from 'native-base';
+import { Container, Header, Item, Input, Icon, Button, Text, Toast, Left, Body, View, Spinner } from 'native-base';
 import Drawer from 'react-native-drawer';
 import I18n from '../js/i18n';
 import Rest from '../js/rest';
@@ -11,7 +11,8 @@ export default class KnowledgeBaseScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            kbPopular: []
+            kbPopular: [],
+            loaded: false
         };
     }
 
@@ -29,7 +30,7 @@ export default class KnowledgeBaseScreen extends React.Component {
 
     getKbPropular() {
         Rest.getKbPopular(0, 10).then((result) => {
-            this.setState({ kbPopular: result })
+            this.setState({ kbPopular: result, loaded: true })
         }).catch((error) => {
             console.error(error);
         });
@@ -70,10 +71,14 @@ export default class KnowledgeBaseScreen extends React.Component {
                             <Text>{I18n.t('search')}</Text>
                         </Button>
                     </Header>
-                    <FlatList
-                        data={this.state.kbPopular}
-                        renderItem={({ item }) => <KbItemCard item={item} />}
-                    />
+                    {this.state.loaded
+                        ? (<FlatList
+                            data={this.state.kbPopular}
+                            renderItem={({ item }) => <KbItemCard item={item} />}
+                           />)
+                        : (<Spinner color='blue' />)
+                    }
+
                 </Container>
             </Drawer>
         );

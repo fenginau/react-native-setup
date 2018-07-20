@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Container, Header, Item, Input, Icon, Button, Text } from 'native-base';
+import { StyleSheet, ImageBackground } from 'react-native';
+import { Container, Header, Item, Input, Icon, Button, Text, Content, View, Spinner } from 'native-base';
 import Drawer from 'react-native-drawer';
 import I18n from '../js/i18n';
 import Rest from '../js/rest';
@@ -10,14 +10,21 @@ export default class KnowledgebaseItemScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            itemId: 0
+            item: null,
+            itemId: 0,
+            loaded: false
         };
     }
 
     componentDidMount() {
         const { navigation } = this.props;
         const itemId = navigation.getParam('itemId', 0);
-        this.setState({itemId: itemId});
+        this.setState({ itemId: itemId });
+        this.getKbItem(itemId);
+    }
+
+    getKbItem(itemId) {
+        Rest.getKbItem(itemId).then(item => this.setState({ item: item, loaded: true }));
     }
 
     closeDrawer = () => {
@@ -56,17 +63,33 @@ export default class KnowledgebaseItemScreen extends React.Component {
                             <Text>{I18n.t('search')}</Text>
                         </Button>
                     </Header>
+                    <Content>
+                        {this.state.loaded
+                            ? (<View style={styles.titleArea}>
+                                    <ImageBackground style={styles.imgBg} source={require('../resourse/images/bg_imageintro_768x1024.png')}>
+                                        <Text style={styles.title}>{this.state.item.subArea}</Text>
+                                        <Text>{this.state.item.subAreaDesc}</Text>
+                                    </ImageBackground>
+                               </View>)
+                            : (<Spinner color='blue' />)
+                        }
+                    </Content>
                 </Container>
             </Drawer>
         );
     }
 }
-var styles = StyleSheet.create({
-    container: {
+const styles = StyleSheet.create({
+    titleArea: {
         flex: 1,
         justifyContent: 'center',
     },
-    hello: {
+    imgBg: {
+        height: 200,
+        width: '100%',
+        justifyContent: 'center',
+    },
+    title: {
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
