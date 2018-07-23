@@ -74,7 +74,7 @@ export default class KnowledgeBaseScreen extends React.Component {
                     {this.state.loaded
                         ? (<FlatList
                             data={this.state.kbPopular}
-                            renderItem={({ item }) => <KbItemCard item={item} />}
+                            renderItem={({ item }) => <KbItemCard navigation={this.props.navigation} item={item} />}
                            />)
                         : (<Spinner color='blue' />)
                     }

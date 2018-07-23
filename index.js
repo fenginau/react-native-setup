@@ -13,4 +13,4 @@ class HelloWorld extends React.Component {
     }
 }
 
-AppRegistry.registerComponent('MyReactNativeApp', () => HelloWorld);
+AppRegistry.registerComponent('react1', () => HelloWorld);

@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     titleArea: {
         flex: 1,
         justifyContent: 'center',
+        fontFamily: 'Montserrat Medium'
     },
     imgBg: {
         height: 200,
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         margin: 10,
+        fontFamily: 'Montserrat'
     },
 });
 
