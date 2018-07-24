@@ -4,6 +4,7 @@ import HomeScreen from '../views/home';
 import KnowledgeBaseScreen from '../views/knowledgebase';
 import SettingScreen from '../views/setting';
 import KnowledgebaseItemScreen from '../views/knowledgebaseitem';
+import ChatScreen from '../views/chat';
 import I18n from '../js/i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -61,6 +62,18 @@ const Navigator = createBottomTabNavigator({
                 const { routeName } = navigation.state;
                 let iconName;
                 iconName = `ios-settings${focused ? '' : '-outline'}`;
+                return <Ionicons name={iconName} size={25} color={tintColor} />;
+            }
+        })
+    },
+    Chat: {
+        screen: ChatScreen,
+        navigationOptions: ({ navigation }) => ({
+            title: I18n.t('chat'),
+            tabBarIcon: ({ focused, tintColor }) => {
+                const { routeName } = navigation.state;
+                let iconName;
+                iconName = `ios-text${focused ? '' : '-outline'}`;
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             }
         })

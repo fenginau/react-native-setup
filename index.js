@@ -1,14 +1,11 @@
 import React from 'react';
-import { AppRegistry, StyleSheet, Text, View } from 'react-native';
-import Navigator from './components/navigator';
-import { Root } from "native-base";
+import { AppRegistry } from 'react-native';
+import App from './components/app';
 
 class HelloWorld extends React.Component {
     render() {
         return (
-            <Root>
-                <Navigator />
-            </Root>
+            <App />
         );
     }
 }

@@ -2,5 +2,6 @@ export default {
     home: 'Home',
     info: 'Info',
     setting: 'Setting',
-    search: 'Search'
+    search: 'Search',
+    chat: 'Chat',
 };

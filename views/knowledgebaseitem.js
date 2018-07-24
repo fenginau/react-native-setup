@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, ImageBackground } from 'react-native';
+import { StyleSheet, ImageBackground, Dimensions, ScrollView } from 'react-native';
 import { Container, Header, Item, Input, Icon, Button, Text, Content, View, Spinner } from 'native-base';
 import Drawer from 'react-native-drawer';
+import HTML from 'react-native-render-html';
 import I18n from '../js/i18n';
 import Rest from '../js/rest';
 import Sidebar from '../components/sidebar';
@@ -63,13 +64,16 @@ export default class KnowledgebaseItemScreen extends React.Component {
                             <Text>{I18n.t('search')}</Text>
                         </Button>
                     </Header>
-                    <Content>
+                    <Content style={styles.main}>
                         {this.state.loaded
                             ? (<View style={styles.titleArea}>
                                     <ImageBackground style={styles.imgBg} source={require('../resourse/images/bg_imageintro_768x1024.png')}>
                                         <Text style={styles.title}>{this.state.item.subArea}</Text>
-                                        <Text>{this.state.item.subAreaDesc}</Text>
+                                        <Text style={styles.titleDesc}>{this.state.item.subAreaDesc}</Text>
                                     </ImageBackground>
+                                    <ScrollView style={{ flex: 1 }}>
+                                        <HTML html={this.state.item.content} imagesMaxWidth={Dimensions.get('window').width} />
+                                    </ScrollView>
                                </View>)
                             : (<Spinner color='blue' />)
                         }
@@ -80,6 +84,9 @@ export default class KnowledgebaseItemScreen extends React.Component {
     }
 }
 const styles = StyleSheet.create({
+    main: {
+        padding: 16,
+    },
     titleArea: {
         flex: 1,
         justifyContent: 'center',
@@ -96,6 +103,10 @@ const styles = StyleSheet.create({
         margin: 10,
         fontFamily: 'Montserrat'
     },
+    titleDesc: {
+        textAlign: 'center',
+        fontFamily: 'Montserrat'
+    }
 });
 
 const drawerStyles = {

@@ -1,19 +1,13 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
-import HomeScreen from '../views/home';
-import KnowledgeBaseScreen from '../views/knowledgebase';
-import SettingScreen from '../views/setting';
-import KnowledgebaseItemScreen from '../views/knowledgebaseitem';
+import Navigator from './navigator';
+import { Root } from "native-base";
 
-const App = createStackNavigator(
-    {
-        Home: { screen: HomeScreen },
-        Knowledge: { screen: KnowledgeBaseScreen },
-        Settings: { screen: SettingScreen },
-        KnowledgeItem: { screen: KnowledgebaseItemScreen },
-    },
-    {
-        initialRouteName: 'Home',
-    });
-
-export default App;
+export default class App extends React.Component {
+    render() {
+        return (
+            <Root>
+                <Navigator />
+            </Root>
+        );
+    }
+}

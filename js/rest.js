@@ -1,5 +1,5 @@
 import React from 'react';
-import Global from '../js/global';
+import Global from './global';
 
 export default class Rest extends React.Component {
     static get(url) {
@@ -37,6 +37,6 @@ export default class Rest extends React.Component {
     }
 
     static getKbItem(itemId) {
-        return this.get(`knowledgebaseapi/getknowledgebaseSingle/${Global.hardwareId}/${itemId}`);
+        return this.get(`knowledgebaseapi/getknowledgebaseSingle/${Global.hardwareId}/${itemId}?${new Date().getTime()}`);
     }
 }

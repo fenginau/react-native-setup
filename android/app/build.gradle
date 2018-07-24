@@ -101,7 +101,7 @@ android {
     buildToolsVersion "27.0.1"
 
     defaultConfig {
-        applicationId "com.react1"
+        applicationId "com.feng.react1"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
