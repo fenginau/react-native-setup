@@ -37,26 +37,24 @@ const SettingStack = createStackNavigator(
                 header: null
             })
         },
-        Camera: {
-            screen: CameraScreen,
-            navigationOptions: () => ({
-                header: null
-            }),
-        },
-        PhotoPreview: {
-            screen: PhotoPreviewScreen,
-            navigationOptions: () => ({
-                header: null
-            }),
-        },
+        // Camera: {
+        //     screen: CameraScreen,
+        //     navigationOptions: () => ({
+        //         header: null
+        //     })
+        // },
+        // PhotoPreview: {
+        //     screen: PhotoPreviewScreen,
+        //     navigationOptions: () => ({
+        //         header: null
+        //     }),
+        // },
     },
     {
-        initialRouteName: 'Settings',
-        mode: 'modal',
-        headerMode: 'none',
+        initialRouteName: 'Settings'
     });
 
-const Navigator = createBottomTabNavigator({
+const RootStack = createBottomTabNavigator({
     Home: {
         screen: HomeScreen,
         navigationOptions: ({ navigation }) => ({
@@ -91,6 +89,10 @@ const Navigator = createBottomTabNavigator({
                 let iconName;
                 iconName = `ios-settings${focused ? '' : '-outline'}`;
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
+            },
+            tabBarVisible: () => {
+                console.log(navigation.state);
+                return true;
             }
         })
     },
@@ -104,6 +106,21 @@ const Navigator = createBottomTabNavigator({
                 iconName = `ios-text${focused ? '' : '-outline'}`;
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             }
+        })
+    }
+});
+
+const Navigator = createStackNavigator({
+    Main: {
+        screen: RootStack,
+        navigationOptions: () => ({
+            header: null
+        })
+    },
+    Camera: {
+        screen: CameraScreen,
+        navigationOptions: () => ({
+            header: null
         })
     }
 });
