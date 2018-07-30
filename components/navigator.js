@@ -2,8 +2,10 @@ import React from 'react';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import HomeScreen from '../views/home';
 import KnowledgeBaseScreen from '../views/knowledgebase';
-import SettingScreen from '../views/setting';
 import KnowledgebaseItemScreen from '../views/knowledgebaseitem';
+import SettingScreen from '../views/setting';
+import CameraScreen from '../views/camera';
+import PhotoPreviewScreen from '../views/photopreview';
 import ChatScreen from '../views/chat';
 import I18n from '../js/i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -27,6 +29,32 @@ const KnowledgeStack = createStackNavigator(
         initialRouteName: 'Knowledge',
     });
 
+const SettingStack = createStackNavigator(
+    {
+        Settings: {
+            screen: SettingScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        Camera: {
+            screen: CameraScreen,
+            navigationOptions: () => ({
+                header: null
+            }),
+        },
+        PhotoPreview: {
+            screen: PhotoPreviewScreen,
+            navigationOptions: () => ({
+                header: null
+            }),
+        },
+    },
+    {
+        initialRouteName: 'Settings',
+        mode: 'modal',
+        headerMode: 'none',
+    });
 
 const Navigator = createBottomTabNavigator({
     Home: {
@@ -55,7 +83,7 @@ const Navigator = createBottomTabNavigator({
         })
     },
     Settings: {
-        screen: SettingScreen,
+        screen: SettingStack,
         navigationOptions: ({ navigation }) => ({
             title: I18n.t('setting'),
             tabBarIcon: ({ focused, tintColor }) => {

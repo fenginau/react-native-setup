@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "413369226301",
+    "firebase_url": "https://reacttest-5733d.firebaseio.com",
+    "project_id": "reacttest-5733d",
+    "storage_bucket": "reacttest-5733d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413369226301:android:b09a045450edfe0d",
+        "android_client_info": {
+          "package_name": "com.feng.react1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413369226301-ghc3c6par49unk7l6rcqitelc96g454e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs0x5RZfj2HWVda2sBbNbXZCcmzu_jtIU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

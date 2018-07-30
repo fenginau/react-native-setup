@@ -1,11 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { RNCamera } from 'react-native-camera'
 
 export default class SettingScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.hello}>This is setting screen</Text>
+                <Button
+                    onPress={() => {
+                        this.props.navigation.navigate('Camera');
+                    }}
+                    title="Take photo"
+                    color="#841584"
+                    accessibilityLabel="Take a photo." />
             </View>
         );
     }
