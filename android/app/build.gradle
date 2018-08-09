@@ -98,7 +98,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.feng.react1"
@@ -140,6 +140,8 @@ android {
 }
 
 dependencies {
+    implementation project(':realm')
+    implementation project(':react-native-fs')
     implementation project(':react-native-camera')
     implementation project(':react-native-firebase')
     implementation project(':react-native-vector-icons')

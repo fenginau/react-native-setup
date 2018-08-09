@@ -35,7 +35,20 @@ allprojects {
 ext {
     compileSdkVersion           = 27
     targetSdkVersion            = 23
-    buildToolsVersion           = "27.0.1"
+    buildToolsVersion           = "27.0.3"
     googlePlayServicesVersion   = "15.0.1"
     supportLibVersion           = "27.1.0"
+}
+
+subprojects {
+    project.configurations.all {
+        afterEvaluate {project ->
+            if (project.hasProperty("android")) {
+                android {
+                    compileSdkVersion 27
+                    buildToolsVersion '27.0.3'
+                }
+            }
+        }
+    }
 }
