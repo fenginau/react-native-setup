@@ -7,6 +7,7 @@ import Global from '../js/global';
 
 export default class App extends React.Component {
     componentDidMount() {
+        //firebase setup
         firebase.messaging().getToken()
             .then(fcmToken => {
                 if (fcmToken) {

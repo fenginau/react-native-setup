@@ -4,4 +4,6 @@ export default {
     setting: 'Setting',
     search: 'Search',
     chat: 'Chat',
+    error: 'Error!',
+    NoMoreContent: 'No more content'
 };

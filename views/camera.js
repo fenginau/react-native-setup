@@ -21,7 +21,7 @@ export default class CameraScreen extends React.Component {
                     <TouchableOpacity
                         onPress={this.takePicture.bind(this)}
                         style={styles.capture}>
-                        <Icon style={{fontSize: 60, color: 'white'}} name='ios-camera' />
+                        <Icon style={{fontSize: 60, color: 'grey'}} name='ios-camera' />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -30,10 +30,10 @@ export default class CameraScreen extends React.Component {
 
     takePicture = async function () {
         if (this.camera) {
-            const options = { quality: 0.5, base64: true };
+            const options = { quality: 0.5, base64: false, fixOrientation: true, forceUpOrientation: true };
             this.camera.takePictureAsync(options).then(data => {
+                console.log(data.uri);
                 this.props.navigation.push('PhotoPreview', { image: data });
-                // console.log(data);
             });
         }
     };
@@ -52,6 +52,12 @@ const styles = StyleSheet.create({
     capture: {
         flex: 0,
         alignSelf: 'center',
-        margin: 20
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 45,
+        height: 90,
+        width: 90,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });

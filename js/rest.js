@@ -45,23 +45,41 @@ export default class Rest extends React.Component {
                 'Content-Type': 'application/json',
                 'Authorization': Global.getBase64Auth()
             }
-        }).then((response) => console.log(response));
+        }).then((response) => console.log('result', response));
     }
 
+    // api
     static getKbMenu() {
         return this.get(`knowledgebaseapi/getKnowledgebaseMenu?${new Date().getTime()}`);
     }
 
-    static getKbPopular(index, interval) {
-        return this.get(`knowledgebaseapi/getKnowledgebasePopular/${Global.hardwareId}/${index}/${interval}`);
+    static getInfoPopular(index, interval) {
+        return this.get(`knowledgebaseapi/getInfoPopular/${index}/${interval}?${new Date().getTime()}`);
     }
 
+    static getInfoSimple(itemId) {
+        return this.get(`knowledgebaseapi/getInfoSimple/${itemId}?${new Date().getTime()}`);
+    }
+
+    static getInfoDetail(itemId) {
+        return this.get(`knowledgebaseapi/getInfoDetail/${itemId}?${new Date().getTime()}`);
+    }
+
+    static getInfoTimestamp(itemId) {
+        return this.get(`knowledgebaseapi/getInfoTimestamp/${itemId}?${new Date().getTime()}`);
+    }
+
+    //old
     static getKbTitleImage(fileId) {
         return this.get(`knowledgebaseapi/getKnowledgebaseTitleImageUrl/${fileId}`);
     }
 
     static getKbItem(itemId) {
         return this.get(`knowledgebaseapi/getknowledgebaseSingle/${Global.hardwareId}/${itemId}?${new Date().getTime()}`);
+    }
+
+    static getSearchItem(text, index, interval) {
+        return this.get(`knowledgebaseapi/getKnowledgebaseSearch/${Global.hardwareId}/${text}/${index}/${interval}?${new Date().getTime()}`);
     }
 
     static sendMessage(message) {

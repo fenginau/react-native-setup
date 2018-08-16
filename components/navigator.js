@@ -36,22 +36,29 @@ const SettingStack = createStackNavigator(
             navigationOptions: () => ({
                 header: null
             })
-        },
-        // Camera: {
-        //     screen: CameraScreen,
-        //     navigationOptions: () => ({
-        //         header: null
-        //     })
-        // },
-        // PhotoPreview: {
-        //     screen: PhotoPreviewScreen,
-        //     navigationOptions: () => ({
-        //         header: null
-        //     }),
-        // },
+        }
     },
     {
         initialRouteName: 'Settings'
+    });
+
+const CameraStack = createStackNavigator(
+    {
+        Camera: {
+            screen: CameraScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        PhotoPreview: {
+            screen: PhotoPreviewScreen,
+            navigationOptions: () => ({
+                header: null
+            }),
+        },
+    },
+    {
+        initialRouteName: 'Camera'
     });
 
 const RootStack = createBottomTabNavigator({
@@ -118,7 +125,7 @@ const Navigator = createStackNavigator({
         })
     },
     Camera: {
-        screen: CameraScreen,
+        screen: CameraStack,
         navigationOptions: () => ({
             header: null
         })
