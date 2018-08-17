@@ -4,13 +4,13 @@ import android.app.Application;
 
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.facebook.react.ReactApplication;
-import com.rnfs.RNFSPackage;
-import io.realm.react.RealmReactPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.reactlibrary.RNVideoPackage;
+import com.rnfs.RNFSPackage;
 
 import org.reactnative.camera.RNCameraPackage;
 
@@ -19,6 +19,7 @@ import java.util.List;
 
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.realm.react.RealmReactPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -38,7 +39,8 @@ public class MainApplication extends Application implements ReactApplication {
               new RNFirebasePackage(),
               new VectorIconsPackage(),
               new RNI18nPackage(),
-              new RNFirebaseMessagingPackage()
+              new RNFirebaseMessagingPackage(),
+              new RNVideoPackage()
       );
     }
 

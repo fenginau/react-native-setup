@@ -26,6 +26,8 @@
         "react-native-i18n": "^2.0.12",
         "react-native-render-html": "^3.10.0",
         "react-native-vector-icons": "^4.6.0",
-        "react-navigation": "^2.6.2"
+        "react-navigation": "^2.6.2",
+        "realm" : "2.13.0",
+        "videomodule": "./video"
     }
 }

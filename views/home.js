@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import realm from '../js/realm';
 import RNFS from 'react-native-fs';
+import RNVideo from 'videomodule';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -28,9 +29,9 @@ export default class HomeScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Text style={styles.hello}>{info}</Text>
-                {this.state.loaded
-                    ? (<Image source={{ uri: 'file://' + RNFS.DocumentDirectoryPath + '/test.png' }} style={{ height: 500, width: 500, flex: 1 }} />)
-                    : (<View></View>)}
+                <Button onPress={() => {
+                    RNVideo.show('Awesome', RNVideo.SHORT);
+                }} title="Press Me" />
             </View>
         );
     }
