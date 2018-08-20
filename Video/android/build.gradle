@@ -25,6 +25,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     lintOptions {
         abortOnError false
@@ -33,9 +34,17 @@ android {
 
 repositories {
     mavenCentral()
+    google()
+    jcenter()
 }
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
+    implementation "com.android.support:appcompat-v7:27.1.0"
+    implementation "com.android.support:preference-v14:27.1.0"
+    implementation "com.android.support:design:27.1.0"
+    implementation "com.koushikdutta.ion:ion:2.2.1"
+    implementation 'com.twilio:video-android:2.1.1'
+    implementation 'com.android.support:multidex:1.0.3'
 }
   

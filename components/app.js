@@ -4,6 +4,7 @@ import Navigator from './navigator';
 import { Root } from "native-base";
 import firebase, { RemoteMessage } from 'react-native-firebase';
 import Global from '../js/global';
+import NavigationService from '../js/navigationservice';
 
 export default class App extends React.Component {
     componentDidMount() {
@@ -32,13 +33,21 @@ export default class App extends React.Component {
                         .catch(error => {
                             // User has rejected permissions
                             Alert.alert('Permission is required for this module.');
-                            this.props.navigation.push('Home');
+                            NavigationService.navigate('Home');
                         });
                 }
             });
         this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => { });
         this.messageListener = firebase.messaging().onMessage((message) => {
-            DeviceEventEmitter.emit('newMessageReceived', message);
+            switch (message.data.type) {
+                case 'video':
+                    console.log('msg receiveddddddddd');
+                    NavigationService.navigate('Video');
+                    break;
+                case 'message':
+                    DeviceEventEmitter.emit('newMessageReceived', message);
+                    break;
+            }
         });
     }
 
@@ -50,7 +59,7 @@ export default class App extends React.Component {
     render() {
         return (
             <Root>
-                <Navigator />
+                <Navigator ref={ref => NavigationService.setTopLevelNavigator(ref)} />
             </Root>
         );
     }

@@ -5,5 +5,6 @@ export default {
     search: 'Search',
     chat: 'Chat',
     error: 'Error!',
-    NoMoreContent: 'No more content'
+    NoMoreContent: 'No more content',
+    PrepareVideo: 'We are preparing video for you...'
 };

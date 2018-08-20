@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import realm from '../js/realm';
 import RNFS from 'react-native-fs';
 import RNVideo from 'videomodule';
+import NavigationService from '../js/navigationservice';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -30,7 +31,7 @@ export default class HomeScreen extends React.Component {
             <View style={styles.container}>
                 <Text style={styles.hello}>{info}</Text>
                 <Button onPress={() => {
-                    RNVideo.show('Awesome', RNVideo.SHORT);
+                    NavigationService.navigate('Video');
                 }} title="Press Me" />
             </View>
         );

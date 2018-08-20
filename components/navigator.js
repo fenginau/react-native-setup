@@ -7,6 +7,7 @@ import SettingScreen from '../views/setting';
 import CameraScreen from '../views/camera';
 import PhotoPreviewScreen from '../views/photopreview';
 import ChatScreen from '../views/chat';
+import VideoResponseScreen from '../views/videoresponse';
 import I18n from '../js/i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -126,6 +127,12 @@ const Navigator = createStackNavigator({
     },
     Camera: {
         screen: CameraStack,
+        navigationOptions: () => ({
+            header: null
+        })
+    },
+    Video: {
+        screen: VideoResponseScreen,
         navigationOptions: () => ({
             header: null
         })

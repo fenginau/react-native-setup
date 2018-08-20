@@ -69,6 +69,10 @@ export default class Rest extends React.Component {
         return this.get(`knowledgebaseapi/getInfoTimestamp/${itemId}?${new Date().getTime()}`);
     }
 
+    static getTwilioToken() {
+        return this.get(`callapi/getTwilioVideoToken/${Global.hardwareId}/${Global.hardwareId}?${new Date().getTime()}`);
+    }
+
     //old
     static getKbTitleImage(fileId) {
         return this.get(`knowledgebaseapi/getKnowledgebaseTitleImageUrl/${fileId}`);
