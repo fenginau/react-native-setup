@@ -36,12 +36,13 @@ public class RNVideoModule extends ReactContextBaseJavaModule {
         return constants;
     }
     @ReactMethod
-    public void show(String token, Callback successCallback, Callback errorCallback) {
+    public void show(String token, String room, Callback successCallback, Callback errorCallback) {
         try {
             ReactApplicationContext context = getReactApplicationContext();
             Intent intent = new Intent(context, VideoActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("TWILIO_TOKEN", token);
+            intent.putExtra("ROOM_NAME", room);
             context.startActivity(intent);
             successCallback.invoke();
         } catch (Exception e) {

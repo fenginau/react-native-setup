@@ -4,6 +4,7 @@ import { Button, Text, Spinner } from 'native-base';
 import RNVideo from 'videomodule';
 import Rest from '../js/rest';
 import I18n from '../js/i18n';
+import Global from '../js/global';
 
 export default class VideoResponseScreen extends React.Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class VideoResponseScreen extends React.Component {
         RNVideo.showToast('Call answered', RNVideo.LONG);
         this.setState({loading: true});
         Rest.getTwilioToken().then(result => {
-            RNVideo.show(result.data.token, () => {
+            RNVideo.show(result.data.token, Global.hardwareId, () => {
                 this.setState({loading: false});
             }, (err) => {
                 console.log(err);

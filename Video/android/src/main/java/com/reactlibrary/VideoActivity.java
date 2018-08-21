@@ -131,6 +131,7 @@ public class VideoActivity extends AppCompatActivity {
     private LocalAudioTrack localAudioTrack;
     private LocalVideoTrack localVideoTrack;
     private FloatingActionButton micActionFab;
+    private FloatingActionButton connectActionFab;
     private FloatingActionButton switchCameraActionFab;
     private FloatingActionButton localVideoActionFab;
     private FloatingActionButton muteActionFab;
@@ -154,7 +155,8 @@ public class VideoActivity extends AppCompatActivity {
         thumbnailVideoView = findViewById(R.id.thumbnail_video_view);
         videoStatusTextView = findViewById(R.id.video_status_textview);
 
-        micActionFab = findViewById(R.id.connect_action_fab);
+        connectActionFab = findViewById(R.id.connect_action_fab);
+        micActionFab = findViewById(R.id.mic_action_fab);
         switchCameraActionFab = findViewById(R.id.switch_camera_action_fab);
         localVideoActionFab = findViewById(R.id.local_video_action_fab);
         muteActionFab = findViewById(R.id.mute_action_fab);
@@ -189,6 +191,8 @@ public class VideoActivity extends AppCompatActivity {
          * Set the initial state of the UI
          */
         intializeUI();
+        String roomName = getIntent().getStringExtra("ROOM_NAME");
+        connectToRoom(roomName);
     }
 
     @Override
@@ -241,7 +245,7 @@ public class VideoActivity extends AppCompatActivity {
     }
 
     @Override
-    protected  void onResume() {
+    protected void onResume() {
         super.onResume();
 
         /*
@@ -403,6 +407,7 @@ public class VideoActivity extends AppCompatActivity {
 
     private void connectToRoom(String roomName) {
         configureAudio(true);
+        System.out.println(roomName);
         ConnectOptions.Builder connectOptionsBuilder = new ConnectOptions.Builder(accessToken)
                 .roomName(roomName);
 
@@ -424,15 +429,18 @@ public class VideoActivity extends AppCompatActivity {
         /*
          * Set the preferred audio and video codec for media.
          */
-        connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec));
-        connectOptionsBuilder.preferVideoCodecs(Collections.singletonList(videoCodec));
+        //connectOptionsBuilder.preferAudioCodecs(Collections.singletonList(audioCodec));
+        //connectOptionsBuilder.preferVideoCodecs(Collections.singletonList(videoCodec));
 
         /*
          * Set the sender side encoding parameters.
          */
-        connectOptionsBuilder.encodingParameters(encodingParameters);
+        //connectOptionsBuilder.encodingParameters(encodingParameters);
 
-        room = Video.connect(this, connectOptionsBuilder.build(), roomListener());
+        Room.Listener listener = roomListener();
+        ConnectOptions co = connectOptionsBuilder.build();
+
+        room = Video.connect(this, co, listener);
         setDisconnectAction();
     }
 
@@ -506,10 +514,8 @@ public class VideoActivity extends AppCompatActivity {
      * The actions performed during disconnect.
      */
     private void setDisconnectAction() {
-        micActionFab.setImageDrawable(ContextCompat.getDrawable(this,
-                R.drawable.ic_call_end_white_24px));
-        micActionFab.show();
-        micActionFab.setOnClickListener(disconnectClickListener());
+        connectActionFab.show();
+        connectActionFab.setOnClickListener(disconnectClickListener());
     }
 
     /*
@@ -971,6 +977,7 @@ public class VideoActivity extends AppCompatActivity {
                     room.disconnect();
                 }
                 intializeUI();
+                finish();
             }
         };
     }
