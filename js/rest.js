@@ -70,7 +70,8 @@ export default class Rest extends React.Component {
     }
 
     static getTwilioToken() {
-        return this.get(`callapi/getTwilioVideoToken/${Global.hardwareId}/${Global.hardwareId+'333'}?${new Date().getTime()}`);
+        console.log(Global.deviceModel);
+        return this.get(`callapi/getTwilioVideoToken/${Global.hardwareId}/${Global.hardwareId+Global.deviceModel}?${new Date().getTime()}`);
     }
 
     //old

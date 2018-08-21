@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/fab_margin"
-            android:background="#ff4949"
+            app:backgroundTint="#ff4949"
             app:fabSize="normal"
             android:src="@drawable/ic_call_end_white_24px" />
         <TextView
