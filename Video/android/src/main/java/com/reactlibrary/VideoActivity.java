@@ -10,6 +10,7 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -143,6 +144,8 @@ public class VideoActivity extends AppCompatActivity {
     private boolean previousMicrophoneMute;
     private VideoRenderer localVideoView;
     private boolean disconnectedFromOnDestroy;
+
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -407,7 +410,6 @@ public class VideoActivity extends AppCompatActivity {
 
     private void connectToRoom(String roomName) {
         configureAudio(true);
-        System.out.println(roomName);
         ConnectOptions.Builder connectOptionsBuilder = new ConnectOptions.Builder(accessToken)
                 .roomName(roomName);
 
@@ -441,15 +443,15 @@ public class VideoActivity extends AppCompatActivity {
         ConnectOptions co = connectOptionsBuilder.build();
 
         room = Video.connect(this, co, listener);
-        setDisconnectAction();
+        //setDisconnectAction();
     }
 
     /*
      * The initial state when there is no active room.
      */
     private void intializeUI() {
-//        micActionFab.setImageDrawable(ContextCompat.getDrawable(this,
-//                R.drawable.ic_video_call_white_24dp));
+        connectActionFab.show();
+        connectActionFab.setOnClickListener(disconnectClickListener());
         micActionFab.show();
         micActionFab.setOnClickListener(micActionClickListener());
         switchCameraActionFab.show();
@@ -458,6 +460,18 @@ public class VideoActivity extends AppCompatActivity {
         localVideoActionFab.setOnClickListener(localVideoClickListener());
         muteActionFab.show();
         muteActionFab.setOnClickListener(muteClickListener());
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                connectActionFab.animate().alpha(0.0f);
+                connectActionFab.hide();
+            }
+        };
+        if (handler == null) {
+            handler = new Handler();
+        }
+        handler.postDelayed(runnable, 5000);
+        primaryVideoView.setOnClickListener(videoOnclickListener(runnable));
     }
 
     /*
@@ -613,6 +627,12 @@ public class VideoActivity extends AppCompatActivity {
             }
         }
         moveLocalVideoToPrimaryView();
+
+        if (room != null) {
+            room.disconnect();
+        }
+        intializeUI();
+        finish();
     }
 
     private void removeParticipantVideo(VideoTrack videoTrack) {
@@ -1138,5 +1158,24 @@ public class VideoActivity extends AppCompatActivity {
             audioManager.requestAudioFocus(null, AudioManager.STREAM_VOICE_CALL,
                     AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         }
+    }
+
+    private View.OnClickListener videoOnclickListener(final Runnable runnable) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connectActionFab.animate().alpha(1.0f);
+                connectActionFab.show();
+                if (primaryVideoView.getVisibility() == View.VISIBLE) {
+                    handler.removeCallbacksAndMessages(null);
+                    handler.postDelayed(runnable, 5000);
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onBackPressed() {
+        //do nothing
     }
 }

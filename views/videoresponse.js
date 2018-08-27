@@ -5,6 +5,7 @@ import RNVideo from 'videomodule';
 import Rest from '../js/rest';
 import I18n from '../js/i18n';
 import Global from '../js/global';
+import Permission from '../js/permission';
 
 export default class VideoResponseScreen extends React.Component {
     constructor(props) {
@@ -22,11 +23,19 @@ export default class VideoResponseScreen extends React.Component {
         RNVideo.showToast('Call answered', RNVideo.LONG);
         this.setState({loading: true});
         Rest.getTwilioToken().then(result => {
-            RNVideo.show(result.data.token, Global.hardwareId, () => {
-                this.setState({loading: false});
-            }, (err) => {
-                console.log(err);
+            Permission.requestPermission(
+                ['CAMERA', 'RECORD_AUDIO', 'READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']
+            ).then(() => {
+                this.showVideoActivity(result.data.token);
             });
+        });
+    }
+
+    showVideoActivity(token) {
+        RNVideo.show(token, Global.hardwareId, () => {
+            this.setState({loading: false});
+        }, (err) => {
+            console.log(err);
         });
     }
 
@@ -46,6 +55,7 @@ export default class VideoResponseScreen extends React.Component {
                 </Button>
                 <Button danger onPress={() => {
                     RNVideo.showToast('Call rejected', RNVideo.LONG);
+                    this.props.navigation.goBack();
                 }}>
                     <Text>Reject</Text>
                 </Button>
