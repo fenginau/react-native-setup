@@ -5,6 +5,17 @@ export default {
     search: 'Search',
     chat: 'Chat',
     error: 'Error!',
+    Save: 'Save',
     NoMoreContent: 'No more content',
-    PrepareVideo: 'We are preparing video for you...'
+    PrepareVideo: 'We are preparing video for you...',
+    EditPhoto: 'Edit Photo',
+    Photo: 'Photo',
+    Name: 'Name',
+    NamePh: 'Input your name here...',
+    NameDesc: 'I want people call me...',
+    Desc: 'Description',
+    DescPh: 'Description goes here...',
+    DescDesc: 'Something about me...',
+    PhotoPh: 'Photo goes here',
+    PhotoDesc: 'Description of the photo',
 };

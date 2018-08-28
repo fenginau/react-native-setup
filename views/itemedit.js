@@ -5,7 +5,7 @@ import RNFS from 'react-native-fs';
 import RNVideo from 'videomodule';
 import NavigationService from '../js/navigationservice';
 
-export default class HomeScreen extends React.Component {
+export default class ItemEditScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,21 +15,13 @@ export default class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
-        realm.write(() => {
-            // realm.deleteAll();
-            realm.create('Cat', { name: 'PP' });
-            this.setState({ realm });
-        });
-
+        
     }
 
     render() {
-        const info = this.state.realm
-            ? 'Cats: ' + this.state.realm.objects('Cat').length + 'Info:' + this.state.realm.objects('InfoSimple').length
-            : 'Loading...';
         return (
             <View style={styles.container}>
-                <Text style={styles.hello}>{info}</Text>
+                <Text style={styles.hello}></Text>
                 <Button onPress={() => {
                     NavigationService.navigate('Video');
                 }} title="Press Me" />
