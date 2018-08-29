@@ -16,6 +16,7 @@ export default {
     Desc: 'Description',
     DescPh: 'Description goes here...',
     DescDesc: 'Something about me...',
-    PhotoPh: 'Photo goes here',
-    PhotoDesc: 'Description of the photo',
+    Region: 'Region',
+    Interest: 'Interest',
+    DOB: 'Birthday'
 };

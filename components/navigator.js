@@ -8,6 +8,7 @@ import CameraScreen from '../views/camera';
 import PhotoPreviewScreen from '../views/photopreview';
 import ChatScreen from '../views/chat';
 import TextInputScreen from '../views/textinput';
+import SelectScreen from '../views/select';
 import VideoResponseScreen from '../views/videoresponse';
 import I18n from '../js/i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -140,6 +141,12 @@ const Navigator = createStackNavigator({
     },
     TextInput: {
         screen: TextInputScreen,
+        navigationOptions: () => ({
+            header: null
+        })
+    },
+    Select: {
+        screen: SelectScreen,
         navigationOptions: () => ({
             header: null
         })

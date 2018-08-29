@@ -33,7 +33,7 @@ export default class TextInputScreen extends React.Component {
         const multiline = navigation.getParam('multiline', false);
         const size = navigation.getParam('size', 20);
         const text = navigation.getParam('text', '');
-        this.setState({ item, title, placeholder, description, multiline, size, text }, () => { console.log(this.state); });
+        this.setState({ item, title, placeholder, description, multiline, size, text });
     }
 
     componentDidMount() {
