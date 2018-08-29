@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Platform, DatePickerAndroid } from 'react-native';
 import { Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
 import { RNCamera } from 'react-native-camera'
+import Moment from 'moment';
 import PhotoItem from '../components/photoitem';
 import I18n from '../js/i18n';
 import Dictionary from '../js/dictionary';
@@ -16,7 +17,7 @@ export default class SettingScreen extends React.Component {
             desc: '',
             region: [],
             interest: [],
-            dob: new Date()
+            dob: null
         };
     }
 
@@ -77,10 +78,14 @@ export default class SettingScreen extends React.Component {
         if (Platform.OS == 'android') {
             try {
                 const { action, year, month, day } = await DatePickerAndroid.open({
-                    date: this.state.dob
+                    date: this.state.dob != null ? this.state.dob : new Date()
                 });
                 if (action !== DatePickerAndroid.dismissedAction) {
-                    this.setState({dob: new Date(year, month, day)});
+                    switch (item) {
+                        case Item.dob:
+                            this.setState({ dob: new Date(year, month, day) });
+                            break;
+                    }
                 }
             } catch ({ code, message }) {
                 console.warn('Cannot open date picker', message);
@@ -185,21 +190,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.dob)}</Text>
                             </Left>
                             <Body>
-                                {/* <DatePicker
-                                    ref={ref => this.dobPicker = ref}
-                                    defaultDate={new Date(2018, 4, 4)}
-                                    minimumDate={new Date(2018, 1, 1)}
-                                    maximumDate={new Date(2018, 12, 31)}
-                                    locale={"en"}
-                                    timeZoneOffsetInMinutes={undefined}
-                                    modalTransparent={false}
-                                    animationType={"fade"}
-                                    androidMode={"default"}
-                                    placeHolderText="Select date"
-                                    textStyle={{ color: "green" }}
-                                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                                    onDateChange={this.setDate}
-                                /> */}
+                                <Text style={styles.listText}>{this.state.dob != null && Moment(this.state.dob).format('DD MMM YYYY')}</Text>
                             </Body>
                         </ListItem>
                     </List>
@@ -210,7 +201,8 @@ export default class SettingScreen extends React.Component {
 }
 const styles = StyleSheet.create({
     listBody: {
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        textAlign: 'right'
     },
     listText: {
         textAlign: 'right'
