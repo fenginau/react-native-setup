@@ -9,6 +9,7 @@ import PhotoPreviewScreen from '../views/photopreview';
 import ChatScreen from '../views/chat';
 import TextInputScreen from '../views/textinput';
 import SelectScreen from '../views/select';
+import PhotoAlbumScreen from '../views/photoalbum';
 import VideoResponseScreen from '../views/videoresponse';
 import I18n from '../js/i18n';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -128,10 +129,16 @@ const Navigator = createStackNavigator({
         })
     },
     Camera: {
-        screen: CameraStack,
+        screen: CameraScreen,
         navigationOptions: () => ({
             header: null
         })
+    },
+    PhotoPreview: {
+        screen: PhotoPreviewScreen,
+        navigationOptions: () => ({
+            header: null
+        }),
     },
     Video: {
         screen: VideoResponseScreen,
@@ -147,6 +154,12 @@ const Navigator = createStackNavigator({
     },
     Select: {
         screen: SelectScreen,
+        navigationOptions: () => ({
+            header: null
+        })
+    },
+    PhotoAlbum: {
+        screen: PhotoAlbumScreen,
         navigationOptions: () => ({
             header: null
         })

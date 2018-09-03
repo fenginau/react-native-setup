@@ -31,8 +31,6 @@ export default class PhotoPreviewScreen extends React.Component {
             return (
                 <Container style={styles.container}>
                     <Image source={{uri: this.state.image.uri}} style={{ width: '100%', height: '100%' }} />
-
-                    {/* <Image source={{ uri: `data:image/jpg;base64,${this.state.image.base64}` }} style={{ width: '100%', height: '100%' }} /> */}
                     <View style={{ flex: 1, flexDirection: 'row', position: 'absolute', bottom: 0, width: '100%' }}>
                         <View style={{ flex: 0.5 }}>
                             <TouchableOpacity

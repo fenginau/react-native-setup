@@ -30,7 +30,7 @@ export default class SelectScreen extends React.Component {
         const keys = navigation.getParam('keys', []);
         const multi = navigation.getParam('multi', false);
         this.buildList(item)
-        this.setState({ item, title, keys, multi }, () => { this.setState({ loaded: true }) });
+        this.setState({ item, title, keys, multi, loaded: true });
     }
 
     componentDidMount() {

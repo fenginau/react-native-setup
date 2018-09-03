@@ -1,9 +1,8 @@
 import React from 'react';
 import { StyleSheet, Platform, DatePickerAndroid } from 'react-native';
-import { Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text } from 'native-base';
+import { Container, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, ActionSheet } from 'native-base';
 import { RNCamera } from 'react-native-camera'
 import Moment from 'moment';
-import PhotoItem from '../components/photoitem';
 import I18n from '../js/i18n';
 import Dictionary from '../js/dictionary';
 import { Item, ItemName } from '../js/item';
@@ -74,6 +73,35 @@ export default class SettingScreen extends React.Component {
         });
     }
 
+    pickPhoto(item) {
+        let options = [
+            { text: I18n.t('Album'), icon: 'ios-images', iconColor: 'blue' },
+            { text: I18n.t('Camera'), icon: 'ios-camera', iconColor: 'blue' },
+            { text: I18n.t('Cancel'), icon: 'ios-close-circle', iconColor: 'red' },
+        ];
+        ActionSheet.show({
+            options: options,
+            cancelButtonIndex: 2,
+            title: I18n.t('PickPhotoFrom')
+        }, buttonIndex => {
+            switch (buttonIndex) {
+                case 0:
+                    this.props.navigation.navigate('PhotoAlbum', {
+                        item,
+                        title: I18n.t('Album'),
+                        returnData: this.onDataReturn.bind(this)
+                    });
+                    break;
+                case 1:
+                    this.props.navigation.navigate('Camera', {
+                        item,
+                        returnData: this.onDataReturn.bind(this)
+                    });
+                    break;
+            }
+        });
+    }
+
     async openDataPicker(item) {
         if (Platform.OS == 'android') {
             try {
@@ -108,6 +136,9 @@ export default class SettingScreen extends React.Component {
                 break;
             case Item.interest:
                 this.setState({ interest: data });
+                break;
+            case Item.photo:
+                this.setState({ photo: data });
                 break;
         }
         console.log(item, data);
@@ -145,12 +176,15 @@ export default class SettingScreen extends React.Component {
                 <Header />
                 <Content>
                     <List>
-                        <ListItem>
+                        <ListItem onPress={this.pickPhoto.bind(this, Item.photo)}>
                             <Left>
                                 <Text>{I18n.t(ItemName.photo)}</Text>
                             </Left>
-                            <Body style={styles.listBody}>
-                                <Thumbnail source={require('../resourse/images/grey.jpg')} />
+                            <Body>
+                                <Thumbnail style={styles.rightAlign}
+                                    source={this.state.photo == ''
+                                        ? require('../resourse/images/grey.jpg')
+                                        : { uri: this.state.photo }} />
                             </Body>
                         </ListItem>
                         <ListItem onPress={this.gotoTextInput.bind(this, Item.name)}>
@@ -158,7 +192,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.name)}</Text>
                             </Left>
                             <Body>
-                                <Text style={styles.listText}>{this.state.name}</Text>
+                                <Text style={styles.rightAlign}>{this.state.name}</Text>
                             </Body>
                         </ListItem>
                         <ListItem onPress={this.gotoTextInput.bind(this, Item.desc)}>
@@ -166,7 +200,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.desc)}</Text>
                             </Left>
                             <Body>
-                                <Text style={styles.listText}>{this.state.desc}</Text>
+                                <Text style={styles.rightAlign}>{this.state.desc}</Text>
                             </Body>
                         </ListItem>
                         <ListItem onPress={this.gotoSelect.bind(this, Item.region)}>
@@ -174,7 +208,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.region)}</Text>
                             </Left>
                             <Body>
-                                <Text style={styles.listText}>{this.getSelectValue(Item.region)}</Text>
+                                <Text style={styles.rightAlign}>{this.getSelectValue(Item.region)}</Text>
                             </Body>
                         </ListItem>
                         <ListItem onPress={this.gotoSelect.bind(this, Item.interest)}>
@@ -182,7 +216,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.interest)}</Text>
                             </Left>
                             <Body>
-                                <Text style={styles.listText}>{this.getSelectValue(Item.interest)}</Text>
+                                <Text style={styles.rightAlign}>{this.getSelectValue(Item.interest)}</Text>
                             </Body>
                         </ListItem>
                         <ListItem onPress={this.openDataPicker.bind(this, Item.dob)}>
@@ -190,7 +224,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.dob)}</Text>
                             </Left>
                             <Body>
-                                <Text style={styles.listText}>{this.state.dob != null && Moment(this.state.dob).format('DD MMM YYYY')}</Text>
+                                <Text style={styles.rightAlign}>{this.state.dob != null && Moment(this.state.dob).format('DD MMM YYYY')}</Text>
                             </Body>
                         </ListItem>
                     </List>
@@ -200,11 +234,11 @@ export default class SettingScreen extends React.Component {
     }
 }
 const styles = StyleSheet.create({
-    listBody: {
-        justifyContent: 'flex-end',
-        textAlign: 'right'
+    rightAlign: {
+        textAlign: 'right',
+        alignSelf: 'flex-end',
     },
-    listText: {
-        textAlign: 'right'
-    },
+    // rightAligh: {
+    //     alignSelf: 'flex-end',
+    // }
 });
