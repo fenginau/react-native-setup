@@ -181,7 +181,7 @@ export default class SettingScreen extends React.Component {
                                 <Text>{I18n.t(ItemName.photo)}</Text>
                             </Left>
                             <Body>
-                                <Thumbnail style={styles.rightAlign}
+                                <Thumbnail style={[styles.rightAlign, styles.border]} large
                                     source={this.state.photo == ''
                                         ? require('../resourse/images/grey.jpg')
                                         : { uri: this.state.photo }} />
@@ -238,7 +238,8 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         alignSelf: 'flex-end',
     },
-    // rightAligh: {
-    //     alignSelf: 'flex-end',
-    // }
+    border: {
+        borderWidth: 3, 
+        borderColor: '#e8e8e8',
+    }
 });

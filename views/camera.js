@@ -28,9 +28,9 @@ export default class CameraScreen extends React.Component {
     }
 
     retakePic() {
-        this.setState({image: null, done: false, showSpinner: false});
+        this.setState({ image: null, done: false, showSpinner: false });
     }
-    
+
     render() {
         if (this.state.done) {
             return (
@@ -75,7 +75,7 @@ export default class CameraScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
                     {this.state.showSpinner &&
-                        <View style={styles.overlaySpinner}>
+                        <View style={[styles.overlaySpinner, { height: Dimensions.get('window').height }]}>
                             <Spinner color='blue' />
                         </View>}
                 </View>
@@ -84,12 +84,11 @@ export default class CameraScreen extends React.Component {
     }
 
     takePicture = async function () {
-        this.setState({showSpinner: true});
+        this.setState({ showSpinner: true });
         if (this.camera) {
             const options = { quality: 0.5, base64: false, fixOrientation: true, forceUpOrientation: true };
             this.camera.takePictureAsync(options).then(data => {
-                this.setState({image: data, done: true, showSpinner: false});
-                //this.props.navigation.push('PhotoPreview', { image: data });
+                this.setState({ image: data, done: true, showSpinner: false });
             });
         }
     };
@@ -116,14 +115,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    overlaySpinner: { 
-        flex: 1, 
-        justifyContent: 'center', 
-        position: 'absolute', 
-        top: 0, 
-        width: '100%', 
-        height: Dimensions.get('window').height, 
-        backgroundColor: 'rgba(255, 255, 255, 0.4)' 
+    overlaySpinner: {
+        flex: 1,
+        justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
+        width: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.4)'
     },
     button: {
         flex: 0,
