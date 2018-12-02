@@ -25,4 +25,6 @@ export default {
     Region: 'Region',
     Interest: 'Interest',
     DOB: 'Birthday',
+    searchHistory: 'Search History',
+    
 };

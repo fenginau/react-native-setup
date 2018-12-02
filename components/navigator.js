@@ -12,6 +12,7 @@ import SelectScreen from '../views/select';
 import PhotoAlbumScreen from '../views/photoalbum';
 import VideoResponseScreen from '../views/videoresponse';
 import I18n from '../js/i18n';
+import TabBarComponent from '../components/TabBarComponent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const KnowledgeStack = createStackNavigator(
@@ -69,11 +70,11 @@ const RootStack = createBottomTabNavigator({
     Home: {
         screen: HomeScreen,
         navigationOptions: ({ navigation }) => ({
-            title: I18n.t('home'),
+            title: I18n.t('search'),
             tabBarIcon: ({ focused, tintColor }) => {
                 const { routeName } = navigation.state;
                 let iconName;
-                iconName = `ios-home${focused ? '' : '-outline'}`;
+                iconName = `ios-search${focused ? '' : '-outline'}`;
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             }
         })
@@ -86,7 +87,7 @@ const RootStack = createBottomTabNavigator({
             tabBarIcon: ({ focused, tintColor }) => {
                 const { routeName } = navigation.state;
                 let iconName;
-                iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+                iconName = `ios-star${focused ? '' : '-outline'}`;
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             }
         })
@@ -119,7 +120,15 @@ const RootStack = createBottomTabNavigator({
             }
         })
     }
-});
+},
+    (Platform.OS === 'android')
+        ? {
+            tabBarComponent: props => <TabBarComponent {...props} />,
+            tabBarPosition: 'bottom'
+        }
+        : {
+            // don't change tabBarComponent here - it works on iOS after all.
+        });
 
 const Navigator = createStackNavigator({
     Main: {
