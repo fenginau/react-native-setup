@@ -26,5 +26,5 @@ export default {
     Interest: 'Interest',
     DOB: 'Birthday',
     searchHistory: 'Search History',
-    
+    subjectSearch: 'Subjects:'
 };
