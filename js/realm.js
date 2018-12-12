@@ -1,6 +1,16 @@
 import React from 'react';
 import Realm from 'realm';
 
+const RsaKeySchema = {
+    name: 'RsaKey',
+    primaryKey: 'type',
+    properties: {
+        type: 'int',
+        key: 'string'
+    }
+}
+
+// old
 const InfoSimpleSchema = {
     name: 'InfoSimple',
     primaryKey: 'id',
@@ -46,6 +56,7 @@ const InfoImageStoreSchema = {
 
 let realm = new Realm({
     schema: [
+        RsaKeySchema,
         InfoSimpleSchema,
         InfoDetailSchema,
         InfoImageStoreSchema,

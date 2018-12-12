@@ -1,12 +1,18 @@
 import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
-import Navigator from './navigator';
+import { Navigator, AuthNavigator } from './navigator';
 import { Root } from "native-base";
 import firebase, { RemoteMessage } from 'react-native-firebase';
 import Global from '../js/global';
 import NavigationService from '../js/navigationservice';
 
 export default class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            authorised: false,
+        };
+    }
     componentDidMount() {
         //firebase setup
         firebase.messaging().getToken()
@@ -59,7 +65,9 @@ export default class App extends React.Component {
     render() {
         return (
             <Root>
-                <Navigator ref={ref => NavigationService.setTopLevelNavigator(ref)} />
+                {this.state.authorised
+                ? <Navigator ref={ref => NavigationService.setTopLevelNavigator(ref)} />
+                : <AuthNavigator />}
             </Root>
         );
     }

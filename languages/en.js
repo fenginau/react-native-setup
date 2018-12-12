@@ -25,6 +25,13 @@ export default {
     Region: 'Region',
     Interest: 'Interest',
     DOB: 'Birthday',
+    //new stuff
     searchHistory: 'Search History',
-    subjectSearch: 'Subjects:'
+    subjectSearch: 'Subjects:',
+    signin: 'Sign In',
+    accountEmptyError: 'Account cannot be empty',
+    next: 'Next',
+    noAccountMessage: 'Don\'t have an account?',
+    signupAct: 'Sign Up!',
+    signup: 'Sign Up'
 };

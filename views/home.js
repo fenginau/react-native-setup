@@ -75,6 +75,10 @@ export default class HomeScreen extends React.Component {
         });
     }
 
+    historyClick(item) {
+        console.log('history clicked');
+    }
+
     render() {
         return (
             <Container>
@@ -111,7 +115,7 @@ export default class HomeScreen extends React.Component {
                         {this.state.loaded
                             ? (<List dataArray={this.state.searchHistory}
                                 renderRow={(item) =>
-                                    <ListItem style={styles.row}>
+                                    <ListItem style={styles.row} button onPress={this.historyClick.bind(this, item)}>
                                         <View style={styles.row}>
                                             <View style={[styles.row, { flex: 0.5 }]}>
                                                 <Icon style={styles.listIcon} name='ios-book' />

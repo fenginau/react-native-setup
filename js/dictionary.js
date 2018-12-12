@@ -20,5 +20,11 @@ export default {
         7: 'H',
         8: 'I',
         9: 'J',
+    },
+    rsaKeyType: {
+        'ClientPublic': 1,
+        'ClientPrivate': 2,
+        'ServerPublic': 3,
+        'UserPublic': 4
     }
 }

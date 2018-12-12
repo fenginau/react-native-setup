@@ -14,6 +14,7 @@ import VideoResponseScreen from '../views/videoresponse';
 import I18n from '../js/i18n';
 import TabBarComponent from '../components/TabBarComponent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import SigninScreen from '../views/signin';
 
 const KnowledgeStack = createStackNavigator(
     {
@@ -174,4 +175,17 @@ const Navigator = createStackNavigator({
         })
     }
 });
-export default Navigator;
+
+const AuthNavigator = createStackNavigator(
+    {
+        Signin: {
+            screen: SigninScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        }
+    },
+    {
+        initialRouteName: 'Signin'
+    });
+export { Navigator, AuthNavigator };

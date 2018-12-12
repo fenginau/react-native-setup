@@ -38,15 +38,21 @@ export default class Rest extends React.Component {
     }
 
     static get2(url) {
-        return fetch(`${Global.nsServer}/api/${url}`, {
+        return fetch(`${Global.nsServer2}/api/${url}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': Global.getBase64Auth()
+                // 'Authorization': Global.getBase64Auth()
             }
-        }).then((response) => console.log('result', response));
+        }).then((response) => response.json());
     }
+
+    static getServerRsaPublicKey() {
+        return this.get2(`auth/getglobalpublickey?${new Date().getTime()}`);
+    }
+
+
 
     // api
     static getKbMenu() {
