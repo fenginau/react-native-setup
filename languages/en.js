@@ -29,8 +29,11 @@ export default {
     searchHistory: 'Search History',
     subjectSearch: 'Subjects:',
     signin: 'Sign In',
-    accountEmptyError: 'Account cannot be empty',
+    accountNotEmpty: 'Account cannot be empty.',
+    passwordNotEmpty: 'Password cannot be empty.',
+    userNotFound: 'Couldn\'t find this account. Please check you account name is corrent',
     next: 'Next',
+    go: 'Go',
     noAccountMessage: 'Don\'t have an account?',
     signupAct: 'Sign Up!',
     signup: 'Sign Up'

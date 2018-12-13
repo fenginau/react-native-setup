@@ -1,3 +1,4 @@
+import I18n from '../js/i18n';
 export default {
     region: {
         'VIC': {
@@ -25,6 +26,10 @@ export default {
         'ClientPublic': 1,
         'ClientPrivate': 2,
         'ServerPublic': 3,
-        'UserPublic': 4
+    },
+    errorMsg: {
+        'AccountNotEmpty': I18n.t('accountNotEmpty'),
+        'PasswordNotEmpty': I18n.t('passwordNotEmpty'),
+        'UserNotFound': I18n.t('userNotFound')
     }
 }

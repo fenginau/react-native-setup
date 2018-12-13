@@ -25,7 +25,7 @@ export default class Rest extends React.Component {
         }).then((response) => response.json());
     }
 
-    static post2(url, body) {
+    static postUrl(url, body) {
         return fetch(url, {
             method: 'POST',
             headers: {
@@ -48,11 +48,31 @@ export default class Rest extends React.Component {
         }).then((response) => response.json());
     }
 
+    static post2(url, body) {
+        return fetch(`${Global.nsServer2}/api/${url}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                // 'Authorization': Global.getBase64Auth()
+            },
+            body: JSON.stringify(body)
+        }).then((response) => response.json());
+    }
+
+
     static getServerRsaPublicKey() {
         return this.get2(`auth/getglobalpublickey?${new Date().getTime()}`);
     }
 
+    static requestSignin(requeset) {
+        return this.post2('auth/requestsignin', requeset);
+    }
 
+    static signin(request) {
+        return this.post2('auth/signin', requeset);
+    }
+    
 
     // api
     static getKbMenu() {
@@ -94,7 +114,7 @@ export default class Rest extends React.Component {
     }
 
     static sendMessage(message) {
-        return this.post2('http://careintheclouds.com.au/fcmtest/api/values', message);
+        return this.postUrl('http://careintheclouds.com.au/fcmtest/api/values', message);
     }
 
     static sendMessageDirect(message) {

@@ -3,6 +3,13 @@ import JSEncrypt from 'jsencrypt';
 import LocalDB from './localDb';
 import Dictionary from './dictionary';
 import Rest from './rest';
+import CryptoJS from 'crypto-js/core';
+import Cipher from 'crypto-js/cipher-core';
+import AES from 'crypto-js/aes';
+import ECB from 'crypto-js/mode-ecb';
+import Pkcs7 from 'crypto-js/pad-pkcs7';
+import Base64 from 'crypto-js/enc-base64';
+import sha256 from 'crypto-js/sha256';
 
 export default class Security extends React.Component {
     static rsaKeyType = Dictionary.rsaKeyType;
@@ -22,6 +29,15 @@ export default class Security extends React.Component {
         }).catch(e => {
             console.error('Failed to retrieve server public key.');
             console.error(e);
+        });
+    }
+
+    static saveUserSecurityKeys(account, keys) {
+        LocalDB.save('UserSecurity', {
+            account: account.toLowerCase(),
+            rsaPublicKey: keys.userRsaPublicKey,
+            aesKey: this.rsaDecript(keys.userAesKey),
+            salt: keys.salt
         });
     }
 
@@ -73,11 +89,11 @@ export default class Security extends React.Component {
         }
     }
 
-    static getUserRsaPublicKey() {
+    static getUserRsaPublicKey(account) {
         try {
-            let result = LocalDB.getItemById('RsaKey', 'type', this.rsaKeyType.UserPublic);
+            let result = LocalDB.getItemById('UserSecurity', 'account', account.toLowerCase());
             if (result.length > 0) {
-                let key = result[0].key;
+                let key = result[0].rsaPublicKey;
                 return key;
             } else {
                 console.error('Cannot find user RSA public key.');
@@ -85,6 +101,22 @@ export default class Security extends React.Component {
             }
         } catch (e) {
             console.error('Error when trying to get user RSA public key.');
+            console.error(e);
+        }
+    }
+
+    static getUserAesKey(account) {
+        try {
+            let result = LocalDB.getItemById('UserSecurity', 'account', account.toLowerCase());
+            if (result.length > 0) {
+                let key = result[0].aesKey;
+                return key;
+            } else {
+                console.error('Cannot find user AES key.');
+                return null;
+            }
+        } catch (e) {
+            console.error('Error when trying to get user AES key.');
             console.error(e);
         }
     }
@@ -98,41 +130,52 @@ export default class Security extends React.Component {
     }
 
     static rsaEncryptByServerKey(plainText) {
-        var key = this.getServerRsaPublicKey();
+        let key = this.getServerRsaPublicKey();
         if (key != null) {
             let encrypt = new JSEncrypt();
             encrypt.setPublicKey(key);
             return encrypt.encrypt(plainText);
         }
         else {
-            console.error('Server RSA public not found.');
-            throw 'Server RSA public not found.';
+            console.error('Server RSA public key not found.');
+            throw 'Server RSA public key not found.';
         }
     }
 
-    static rsaEncryptByUserKey(plainText) {
-        var key = this.getUserRsaPublicKey();
+    static rsaEncryptByUserKey(account, plainText) {
+        let key = this.getUserRsaPublicKey(account);
         if (key != null) {
             let encrypt = new JSEncrypt();
             encrypt.setPublicKey(key);
             return encrypt.encrypt(plainText);
         }
         else {
-            console.error('User RSA public not found.');
-            throw 'User RSA public not found.';
+            console.error('User RSA public key not found.');
+            throw 'User RSA public key not found.';
         }
     }
 
     static rsaDecript(cypherText) {
-        var key = this.getLocalRsaPrivateKey();
+        let key = this.getLocalRsaPrivateKey();
         if (key != null) {
-            var decrypt = new JSEncrypt();
+            let decrypt = new JSEncrypt();
             decrypt.setPrivateKey(key);
-            return encrypt.decrypt(plainText);
+            return decrypt.decrypt(cypherText);
         }
         else {
-            console.error('Client RSA private not found.');
-            throw 'Client RSA public not found.';
+            console.error('Client RSA private key not found.');
+            throw 'Client RSA private key not found.';
         }
+    }
+
+    static aesEncrypt(account, plainText) {
+        let keyPair = this.getUserAesKey(account).split(':');
+        let key = CryptoJS.enc.Base64.parse(keyPair[0]);
+        console.log(key);
+        let iv = CryptoJS.enc.Base64.parse(keyPair[1]);
+        console.log(iv);
+
+        let encrypted = CryptoJS.AES.encrypt(plainText, key, { iv: iv, mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+        console.log(encrypted.toString());
     }
 }

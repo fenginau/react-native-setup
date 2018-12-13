@@ -10,6 +10,17 @@ const RsaKeySchema = {
     }
 }
 
+const UserSecuritySchema = {
+    name: 'UserSecurity',
+    primaryKey: 'account',
+    properties: {
+        account: 'string',
+        rsaPublicKey: 'string',
+        aesKey: 'string',
+        salt: 'string'
+    }
+}
+
 // old
 const InfoSimpleSchema = {
     name: 'InfoSimple',
@@ -57,6 +68,7 @@ const InfoImageStoreSchema = {
 let realm = new Realm({
     schema: [
         RsaKeySchema,
+        UserSecuritySchema,
         InfoSimpleSchema,
         InfoDetailSchema,
         InfoImageStoreSchema,
