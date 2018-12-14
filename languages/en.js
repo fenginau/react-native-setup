@@ -32,6 +32,7 @@ export default {
     accountNotEmpty: 'Account cannot be empty.',
     passwordNotEmpty: 'Password cannot be empty.',
     userNotFound: 'Couldn\'t find this account. Please check you account name is corrent',
+    passwordNotCorrect: 'The credential you provided is not correct. Please check you account and password.',
     next: 'Next',
     go: 'Go',
     noAccountMessage: 'Don\'t have an account?',

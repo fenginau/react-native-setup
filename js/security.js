@@ -3,13 +3,7 @@ import JSEncrypt from 'jsencrypt';
 import LocalDB from './localDb';
 import Dictionary from './dictionary';
 import Rest from './rest';
-import CryptoJS from 'crypto-js/core';
-import Cipher from 'crypto-js/cipher-core';
-import AES from 'crypto-js/aes';
-import ECB from 'crypto-js/mode-ecb';
-import Pkcs7 from 'crypto-js/pad-pkcs7';
-import Base64 from 'crypto-js/enc-base64';
-import sha256 from 'crypto-js/sha256';
+import CryptoJS from 'crypto-js';
 
 export default class Security extends React.Component {
     static rsaKeyType = Dictionary.rsaKeyType;
@@ -37,7 +31,7 @@ export default class Security extends React.Component {
             account: account.toLowerCase(),
             rsaPublicKey: keys.userRsaPublicKey,
             aesKey: this.rsaDecript(keys.userAesKey),
-            salt: keys.salt
+            salt: this.rsaDecript(keys.salt)
         });
     }
 
@@ -121,6 +115,22 @@ export default class Security extends React.Component {
         }
     }
 
+    static getUserSalt(account) {
+        try {
+            let result = LocalDB.getItemById('UserSecurity', 'account', account.toLowerCase());
+            if (result.length > 0) {
+                let key = result[0].salt;
+                return key;
+            } else {
+                console.error('Cannot find user salt.');
+                return null;
+            }
+        } catch (e) {
+            console.error('Error when trying to get user salt.');
+            console.error(e);
+        }
+    }
+
     static requestSignin() {
         let localPublicKey = this.getLocalRsaPublicKey();
         let localPrivateKey = this.getLocalRsaPrivateKey();
@@ -171,11 +181,22 @@ export default class Security extends React.Component {
     static aesEncrypt(account, plainText) {
         let keyPair = this.getUserAesKey(account).split(':');
         let key = CryptoJS.enc.Base64.parse(keyPair[0]);
-        console.log(key);
         let iv = CryptoJS.enc.Base64.parse(keyPair[1]);
-        console.log(iv);
-
         let encrypted = CryptoJS.AES.encrypt(plainText, key, { iv: iv, mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
-        console.log(encrypted.toString());
+        return encrypted.toString();
     }
+
+    static aesDecrypt(account, cipherText) {
+        let keyPair = this.getUserAesKey(account).split(':');
+        let key = CryptoJS.enc.Base64.parse(keyPair[0]);
+        let iv = CryptoJS.enc.Base64.parse(keyPair[1]);
+        let decrypted = CryptoJS.AES.decrypt(cipherText, key, { iv: iv, mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+        return decrypted.toString(CryptoJS.enc.Utf8)
+    }
+
+    static sha256(account, plainText) {
+        let text = `${plainText}${this.getUserSalt(account)}`;
+        return CryptoJS.SHA256(text).toString(CryptoJS.enc.Base64);
+    }
+
 }

@@ -57,7 +57,15 @@ export default class Rest extends React.Component {
                 // 'Authorization': Global.getBase64Auth()
             },
             body: JSON.stringify(body)
-        }).then((response) => response.json());
+        }).then(response => {
+            if (response.status == 200 || response.status == 201) {
+                return response.json();
+            } else if (response.status == 401) {
+                throw 'unauthorised'
+            } else {
+                throw 'server error'                 
+            }
+        });
     }
 
 
@@ -70,7 +78,7 @@ export default class Rest extends React.Component {
     }
 
     static signin(request) {
-        return this.post2('auth/signin', requeset);
+        return this.post2('auth/signin', request);
     }
     
 

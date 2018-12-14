@@ -54,14 +54,18 @@ export default class SigninScreen extends React.Component {
             this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.PasswordNotEmpty });
             return;
         }
+        password = Security.sha256(account, password);
         let signinRequest = {
             userName: Security.rsaEncryptByServerKey(account),
             password: Security.rsaEncryptByUserKey(account, password)
         };
-        console.log(Security.aesEncrypt(account, 'something'));
-        // Rest.signin(signinRequest).then(result => {
-        //     console.log(result);
-        // });
+        Rest.signin(signinRequest).then(result => {
+            console.log(Security.aesDecrypt(account, result));
+        }).catch(e => {
+            if (e == 'unauthorised') {
+                this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.PasswordNotCorrect });
+            }
+        });
     }
 
     signup() {
@@ -117,7 +121,7 @@ export default class SigninScreen extends React.Component {
                                     placeholder='Password'
                                     returnKeyType='go'
                                     onSubmitEditing={this.signin.bind(this)}
-                                    onChangeText={(text) => this.setState({ password: text })}
+                                    onChangeText={(text) => this.setState({ password: text, inputError: false })}
                                     value={this.state.password}
                                     textContentType='password'
                                     secureTextEntry={this.state.pwdHide} />

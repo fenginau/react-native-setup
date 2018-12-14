@@ -30,6 +30,7 @@ export default {
     errorMsg: {
         'AccountNotEmpty': I18n.t('accountNotEmpty'),
         'PasswordNotEmpty': I18n.t('passwordNotEmpty'),
-        'UserNotFound': I18n.t('userNotFound')
+        'UserNotFound': I18n.t('userNotFound'),
+        'PasswordNotCorrect': I18n.t('passwordNotCorrect'),
     }
 }
