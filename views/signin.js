@@ -69,7 +69,7 @@ export default class SigninScreen extends React.Component {
     }
 
     signup() {
-        console.log(Security.getLocalRsaPrivateKey());
+        this.props.navigation.navigate('Signup');
     }
 
     togglePassword(toggle) {
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     },
     input: {
         backgroundColor: Color.White,
+        opacity: 0.4
     },
     btnNext: {
         alignSelf: 'flex-end',
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     txtSignin: {
         marginBottom: 10,
         color: Color.DarkGrey,
-        fontSize: 18,
+        fontSize: 20,
         textAlign: 'left',
         width: 300
     },

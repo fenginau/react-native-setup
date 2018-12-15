@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dimensions, Image } from 'react-native';
+import I18n from '../js/i18n';
 
 export default class Utils extends React.Component {
     static isNumeric(value) {
@@ -22,5 +23,9 @@ export default class Utils extends React.Component {
                 resolve([adjustWith, adjustHeight]);
             });
         });
+    }
+
+    static getEmptyError(field) {
+        return I18n.t('emptyField').replace('$1', I18n.t(field));
     }
 }

@@ -15,6 +15,7 @@ import I18n from '../js/i18n';
 import TabBarComponent from '../components/TabBarComponent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SigninScreen from '../views/signin';
+import SignupScreen from '../views/signup';
 
 const KnowledgeStack = createStackNavigator(
     {
@@ -180,6 +181,12 @@ const AuthNavigator = createStackNavigator(
     {
         Signin: {
             screen: SigninScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        Signup: {
+            screen: SignupScreen,
             navigationOptions: () => ({
                 header: null
             })

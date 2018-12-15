@@ -36,6 +36,15 @@ export default {
     next: 'Next',
     go: 'Go',
     noAccountMessage: 'Don\'t have an account?',
+    haveAccountMessage: 'Already have an account?',
     signupAct: 'Sign Up!',
-    signup: 'Sign Up'
+    signinAct: 'Sign In!',
+    signup: 'Sign Up',
+    invalidEmail: 'This is not a valid email.',
+    invalidPassword: 'A password should have at least one uppercase, one lower case letter and one number.',
+    emptyField: '$1 cannot be empty.',
+    email: 'Email',
+    name: 'Name',
+    password: 'Password',
+    confirmPassword: 'Confirm Password'
 };
