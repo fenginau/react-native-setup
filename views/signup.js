@@ -20,12 +20,13 @@ export default class SignupScreen extends React.Component {
             password: '',
             passwordConfirm: '',
             inputSet: [],
-            inputValues: []
+            inputValues: [],
         };
     }
 
     componentWillMount() {
         this.setForm();
+        this.renderedInputs = [];
     }
 
     componentDidMount() {
@@ -81,8 +82,8 @@ export default class SignupScreen extends React.Component {
         this.setState({ inputValues: values });
     }
 
-    onNextPress(currentIndex) {
-
+    onNextPress(index) {
+        console.log(index);
     }
 
     render() {
@@ -93,7 +94,7 @@ export default class SignupScreen extends React.Component {
                 </View>
                 <Text style={styles.txtSignin}>{I18n.t('signup')}</Text>
                 <View style={styles.form}>
-                    {this.state.inputSet.map(item => {
+                    {this.state.inputSet.map((item, index) => {
                         return (
                             <View style={styles.inputContainer}>
                                 {item.error &&
@@ -102,12 +103,13 @@ export default class SignupScreen extends React.Component {
                                     <Input
                                         placeholder={item.placeholder}
                                         returnKeyType={item.returnType}
-                                        // onSubmitEditing={() => { this.nameInput.focus() }}
+                                        onSubmitEditing={this.onNextPress.bind(this, index)}
                                         onChangeText={(text) => this.onTextChange(text, item.item)}
                                         value={this.state.inputValues[item.item]}
                                         textContentType={item.contentType}
                                         keyboardType={item.keyboardType}
-                                        blurOnSubmit={false} />
+                                        blurOnSubmit={false}
+                                        focus />
                                     <Icon name={item.icon} />
                                 </Item>
                             </View>
