@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { Container, Item, Input, Icon, Button, Text, View } from 'native-base';
+import { StyleSheet, Image, ScrollView } from 'react-native';
+import { Container, Item, Input, Icon, Button, Text, View, Card, CardItem, Body } from 'native-base';
 import realm from '../js/realm';
 import I18n from '../js/i18n';
 import Color from '../js/color';
@@ -20,7 +20,6 @@ export default class SignupScreen extends React.Component {
             password: '',
             passwordConfirm: '',
             inputSet: [],
-            inputValues: [],
         };
     }
 
@@ -43,7 +42,6 @@ export default class SignupScreen extends React.Component {
                 keyboardType: 'email-address',
                 icon: 'ios-mail',
                 secure: false,
-                focus: false,
                 error: false,
                 errorMsg: Utils.getEmptyError('email')
             },
@@ -55,9 +53,19 @@ export default class SignupScreen extends React.Component {
                 keyboardType: 'default',
                 icon: 'ios-person',
                 secure: false,
-                focus: false,
                 error: false,
                 errorMsg: Utils.getEmptyError('name')
+            },
+            {
+                item: 'password',
+                placeholder: I18n.t('password'),
+                returnType: 'next',
+                contentType: 'password',
+                keyboardType: 'default',
+                icon: 'ios-eye',
+                secure: true,
+                error: false,
+                errorMsg: I18n.t('invalidPassword')
             }
         ];
         this.setState({ inputSet });
@@ -68,22 +76,74 @@ export default class SignupScreen extends React.Component {
     }
 
     signup() {
-        if (this.state.inputValues['email'] == '') {
-            let inputSet = this.state.inputSet;
-            inputSet[0].error = true;
-            this.setState({ inputSet });
-        }
+        var valid = true;
+        let inputSet = this.state.inputSet;
+        inputSet.forEach(item => {
+            if (!item.value || (item.item == 'password' && !this.checkPwd('ALL'))) {
+                item.error = true;
+                valid = false;
+            }
+        });
+        this.setState({ inputSet });
         console.log('signup');
     }
 
-    onTextChange(text, item) {
-        let values = this.state.inputValues;
-        values[item] = text;
-        this.setState({ inputValues: values });
+    onTextChange(text, index) {
+        let inputSet = this.state.inputSet;
+        inputSet[index].value = text;
+        this.setState({ inputSet });
     }
 
-    onNextPress(index) {
-        console.log(index);
+    toggleSecureInput(index, isHide) {
+        let inputSet = this.state.inputSet;
+        inputSet[index].hide = isHide;
+        this.setState({ inputSet });
+    }
+
+    onInputFocus(index) {
+        if (this.state.inputSet[index].item == 'password') {
+            this.setState({ showHint: true });
+        }
+    }
+
+    onInputBlur(index) {
+        let inputSet = this.state.inputSet;
+        switch (inputSet[index].item) {
+            case 'password':
+                break;
+            case 'name':
+                break;
+            case 'email':
+                break;
+        }
+        if (inputSet[index].item == 'password') {
+            this.setState({ showHint: false });
+        }
+
+        if (!inputSet[index].value || (inputSet[index].item == 'password' && !this.checkPwd('ALL'))) {
+            inputSet[index].error = true;
+            this.setState({ inputSet });
+        } else {
+
+        }
+    }
+
+    checkPwd(rule) {
+        let pwd = !this.state.inputSet[2].value ? '' : this.state.inputSet[2].value;
+        switch (rule) {
+            case 'UC':
+                return pwd.search(/[A-Z]/) > -1;
+            case 'LC':
+                return pwd.search(/[a-z]/) > -1;
+            case 'NO':
+                return pwd.search(/[0-9]/) > -1;
+            case 'LEN':
+                return pwd.length > 7;
+            case 'ALL':
+                return pwd.search(/[A-Z]/) > -1 && pwd.search(/[a-z]/) > -1 && pwd.search(/[0-9]/) > -1 && pwd.length > 7;
+            default:
+                return false;
+        }
     }
 
     render() {
@@ -103,44 +163,23 @@ export default class SignupScreen extends React.Component {
                                     <Input
                                         placeholder={item.placeholder}
                                         returnKeyType={item.returnType}
-                                        onSubmitEditing={this.onNextPress.bind(this, index)}
-                                        onChangeText={(text) => this.onTextChange(text, item.item)}
-                                        value={this.state.inputValues[item.item]}
+                                        onChangeText={(text) => this.onTextChange(text, index)}
+                                        value={this.state.inputSet[index].value}
                                         textContentType={item.contentType}
                                         keyboardType={item.keyboardType}
                                         blurOnSubmit={false}
-                                        focus />
-                                    <Icon name={item.icon} />
+                                        secureTextEntry={item.secure && !item.show}
+                                        onFocus={this.onInputFocus.bind(this, index)}
+                                        onBlur={this.onInputBlur.bind(this, index)} />
+                                    {!item.secure
+                                        ? (<Icon name={item.icon} />)
+                                        : this.state.inputSet[index].show
+                                            ? <Icon name='ios-eye' onPress={this.toggleSecureInput.bind(this, index, true)} />
+                                            : <Icon name='ios-eye-off' onPress={this.toggleSecureInput.bind(this, index, false)} />}
                                 </Item>
                             </View>
                         );
                     })}
-                    {/* {this.state.inputError &&
-                        <Text style={styles.txtError}>{this.state.errorMsg}</Text>}
-                    <Item regular style={styles.input} error={this.state.inputError}>
-                        <Input
-                            placeholder='Email ID'
-                            returnKeyType='next'
-                            // onSubmitEditing={() => { this.nameInput.focus() }}
-                            onChangeText={(text) => this.setState({ account: text, inputError: false })}
-                            value={this.state.account}
-                            textContentType='username'
-                            keyboardType='email-address'
-                            blurOnSubmit={false} />
-                        <Icon name='ios-mail' />
-                    </Item>
-                    <Item regular style={styles.input} error={this.state.inputError}>
-                        <Input
-                            ref={(input) => { this.nameInput = input; }}
-                            placeholder='Name'
-                            returnKeyType='next'
-                            // onSubmitEditing={this.nextClick.bind(this)}
-                            onChangeText={(text) => this.setState({ account: text, inputError: false })}
-                            value={this.state.account}
-                            textContentType='name'
-                            keyboardType='default' />
-                        <Icon name='ios-person' />
-                    </Item> */}
                     <Button iconRight block transparent onPress={this.signup.bind(this)} style={styles.btnRegister}>
                         <Text>{I18n.t('signup')}</Text>
                         <Icon name='ios-arrow-forward' />
@@ -150,6 +189,40 @@ export default class SignupScreen extends React.Component {
                         <Text>{I18n.t('signinAct')}</Text>
                     </Button>
                 </View>
+                {this.state.showHint &&
+                    <Card style={styles.pwdHint}>
+                        <CardItem header>
+                            <Text>{I18n.t('passwordIndicator')}</Text>
+                        </CardItem>
+                        <CardItem>
+                            <Body>
+                                <View style={styles.rules}>
+                                    {this.checkPwd('UC')
+                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                    <Text>{I18n.t('passwordRule1')}</Text>
+                                </View>
+                                <View style={styles.rules}>
+                                    {this.checkPwd('LC')
+                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                    <Text>{I18n.t('passwordRule2')}</Text>
+                                </View>
+                                <View style={styles.rules}>
+                                    {this.checkPwd('NO')
+                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                    <Text>{I18n.t('passwordRule3')}</Text>
+                                </View>
+                                <View style={styles.rules}>
+                                    {this.checkPwd('LEN')
+                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                    <Text>{I18n.t('passwordRule4')}</Text>
+                                </View>
+                            </Body>
+                        </CardItem>
+                    </Card>}
             </Container>
         );
     }
@@ -161,13 +234,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: Color.Eve
     },
+    scrollView: {
+        alignItems: 'center',
+        flexDirection: 'column'
+    },
     form: {
         textAlign: 'center',
         alignItems: 'center',
         width: 300,
     },
     inputContainer: {
-        alignSelf: 'stretch'
+        alignSelf: 'stretch',
+        alignItems: 'stretch',
     },
     input: {
         backgroundColor: Color.White,
@@ -209,5 +287,26 @@ const styles = StyleSheet.create({
     formContainer: {
         flex: 0.5,
         justifyContent: 'flex-start',
+    },
+    rules: {
+        flexDirection: 'row',
+        flex: 1,
+        alignItems: 'flex-start'
+    },
+    iconBefore: {
+        fontSize: 16,
+        margin: 5
+    },
+    iconOk: {
+        color: Color.Green
+    },
+    iconError: {
+        color: Color.Error
+    },
+    pwdHint: {
+        alignSelf: 'stretch',
+        width: 298,
+        position: 'relative',
+        top: -520
     }
 });
