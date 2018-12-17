@@ -7,4 +7,5 @@ export default class Color extends React.Component {
     static Eve = '#6ebfe9';
     static White = '#ffffff';
     static Error = '#ce3426';
+    static Green = '#5fecbb';
 }

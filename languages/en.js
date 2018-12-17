@@ -41,10 +41,15 @@ export default {
     signinAct: 'Sign In!',
     signup: 'Sign Up',
     invalidEmail: 'This is not a valid email.',
-    invalidPassword: 'A password should have at least one uppercase, one lower case letter and one number.',
+    invalidPassword: 'Password does not follow the rule.',
     emptyField: '$1 cannot be empty.',
     email: 'Email',
     name: 'Name',
     password: 'Password',
-    confirmPassword: 'Confirm Password'
+    confirmPassword: 'Confirm Password',
+    passwordIndicator: 'A password should:',
+    passwordRule1: 'contains at least one uppercase letter (A-Z);',
+    passwordRule2: 'contains at least one lowercase letter (a-z);',
+    passwordRule3: 'contains at least one number (0-9);',
+    passwordRule4: 'has minimum length of 8.',
 };
