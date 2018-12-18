@@ -58,12 +58,15 @@ export default class Rest extends React.Component {
             },
             body: JSON.stringify(body)
         }).then(response => {
+            console.log(response);
             if (response.status == 200 || response.status == 201) {
                 return response.json();
             } else if (response.status == 401) {
-                throw 'unauthorised'
+                throw 'unauthorised';
+            } else if (response.status == 422) {
+                throw 'duplicate';
             } else {
-                throw 'server error'                 
+                throw 'server error';
             }
         });
     }
@@ -79,6 +82,10 @@ export default class Rest extends React.Component {
 
     static signin(request) {
         return this.post2('auth/signin', request);
+    }
+
+    static signup(request) {
+        return this.post2('user/createuser', request);
     }
     
 

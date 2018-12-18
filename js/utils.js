@@ -28,4 +28,9 @@ export default class Utils extends React.Component {
     static getEmptyError(field) {
         return I18n.t('emptyField').replace('$1', I18n.t(field));
     }
+
+    static isEmail(text) {
+        var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return regex.test(String(text).toLowerCase());
+    }
 }

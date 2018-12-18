@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image, ScrollView } from 'react-native';
-import { Container, Item, Input, Icon, Button, Text, View, Card, CardItem, Body } from 'native-base';
+import { Container, Item, Input, Icon, Button, Text, View, Card, CardItem, Body, Spinner } from 'native-base';
 import realm from '../js/realm';
 import I18n from '../js/i18n';
 import Color from '../js/color';
@@ -20,16 +20,16 @@ export default class SignupScreen extends React.Component {
             password: '',
             passwordConfirm: '',
             inputSet: [],
+            loading: false
         };
     }
 
     componentWillMount() {
         this.setForm();
-        this.renderedInputs = [];
     }
 
-    componentDidMount() {
-        Security.retrieveServerRsaPublicKey();
+    loading(loading) {
+        this.setState({loading: loading});
     }
 
     setForm() {
@@ -40,10 +40,11 @@ export default class SignupScreen extends React.Component {
                 returnType: 'next',
                 contentType: 'username',
                 keyboardType: 'email-address',
+                maxLength: 50,
                 icon: 'ios-mail',
                 secure: false,
                 error: false,
-                errorMsg: Utils.getEmptyError('email')
+                errorMsg: I18n.t('invalidEmail')
             },
             {
                 item: 'name',
@@ -51,6 +52,7 @@ export default class SignupScreen extends React.Component {
                 returnType: 'next',
                 contentType: 'name',
                 keyboardType: 'default',
+                maxLength: 20,
                 icon: 'ios-person',
                 secure: false,
                 error: false,
@@ -62,6 +64,7 @@ export default class SignupScreen extends React.Component {
                 returnType: 'next',
                 contentType: 'password',
                 keyboardType: 'default',
+                maxLength: 50,
                 icon: 'ios-eye',
                 secure: true,
                 error: false,
@@ -78,14 +81,43 @@ export default class SignupScreen extends React.Component {
     signup() {
         var valid = true;
         let inputSet = this.state.inputSet;
+        let signipRequest = {};
         inputSet.forEach(item => {
-            if (!item.value || (item.item == 'password' && !this.checkPwd('ALL'))) {
-                item.error = true;
-                valid = false;
+            switch (item.item) {
+                case 'password':
+                    item.error = !this.checkPwd('ALL');
+                    valid = valid && !item.error;
+                    signipRequest.password = item.value;
+                    break;
+                case 'name':
+                    if (!item.value) {
+                        item.error = true;
+                        valid = false;
+                    } else {
+                        item.error = false;
+                    }
+                    signipRequest.name = item.value;
+                    break;
+                case 'email':
+                    item.error = !Utils.isEmail(item.value);
+                    valid = valid && !item.error;
+                    signipRequest.userName = item.value;
+                    break;
             }
         });
         this.setState({ inputSet });
-        console.log('signup');
+        if (valid) {
+            for (let key in signipRequest) {
+                signipRequest[key] = Security.rsaEncryptByServerKey(signipRequest[key]);
+            }
+            Rest.signup(signipRequest).then(result => {
+                console.log(result);
+            }).catch(e => {
+                if (e == 'duplicate') {
+                    // do
+                }
+            });
+        }
     }
 
     onTextChange(text, index) {
@@ -110,21 +142,21 @@ export default class SignupScreen extends React.Component {
         let inputSet = this.state.inputSet;
         switch (inputSet[index].item) {
             case 'password':
+                inputSet[index].error = !this.checkPwd('ALL');
+                this.setState({ showHint: false, inputSet });
                 break;
             case 'name':
+                if (!inputSet[index].value) {
+                    inputSet[index].error = true;
+                } else {
+                    inputSet[index].error = false;
+                }
+                this.setState({ inputSet });
                 break;
             case 'email':
+                inputSet[index].error = !Utils.isEmail(inputSet[index].value);
+                this.setState({ inputSet });
                 break;
-        }
-        if (inputSet[index].item == 'password') {
-            this.setState({ showHint: false });
-        }
-
-        if (!inputSet[index].value || (inputSet[index].item == 'password' && !this.checkPwd('ALL'))) {
-            inputSet[index].error = true;
-            this.setState({ inputSet });
-        } else {
-
         }
     }
 
@@ -149,80 +181,87 @@ export default class SignupScreen extends React.Component {
     render() {
         return (
             <Container style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <Image source={require('../resourse/images/HealthKite.png')} style={styles.logoSmall} resizeMode='center' />
-                </View>
-                <Text style={styles.txtSignin}>{I18n.t('signup')}</Text>
-                <View style={styles.form}>
-                    {this.state.inputSet.map((item, index) => {
-                        return (
-                            <View style={styles.inputContainer}>
-                                {item.error &&
-                                    <Text style={styles.txtError}>{item.errorMsg}</Text>}
-                                <Item regular style={styles.input} error={item.error}>
-                                    <Input
-                                        placeholder={item.placeholder}
-                                        returnKeyType={item.returnType}
-                                        onChangeText={(text) => this.onTextChange(text, index)}
-                                        value={this.state.inputSet[index].value}
-                                        textContentType={item.contentType}
-                                        keyboardType={item.keyboardType}
-                                        blurOnSubmit={false}
-                                        secureTextEntry={item.secure && !item.show}
-                                        onFocus={this.onInputFocus.bind(this, index)}
-                                        onBlur={this.onInputBlur.bind(this, index)} />
-                                    {!item.secure
-                                        ? (<Icon name={item.icon} />)
-                                        : this.state.inputSet[index].show
-                                            ? <Icon name='ios-eye' onPress={this.toggleSecureInput.bind(this, index, true)} />
-                                            : <Icon name='ios-eye-off' onPress={this.toggleSecureInput.bind(this, index, false)} />}
-                                </Item>
-                            </View>
-                        );
-                    })}
-                    <Button iconRight block transparent onPress={this.signup.bind(this)} style={styles.btnRegister}>
-                        <Text>{I18n.t('signup')}</Text>
-                        <Icon name='ios-arrow-forward' />
-                    </Button>
-                    <Text style={styles.txtSignup}>{I18n.t('haveAccountMessage')}</Text>
-                    <Button transparent onPress={this.signin.bind(this)} style={styles.btnSignup}>
-                        <Text>{I18n.t('signinAct')}</Text>
-                    </Button>
-                </View>
-                {this.state.showHint &&
-                    <Card style={styles.pwdHint}>
-                        <CardItem header>
-                            <Text>{I18n.t('passwordIndicator')}</Text>
-                        </CardItem>
-                        <CardItem>
-                            <Body>
-                                <View style={styles.rules}>
-                                    {this.checkPwd('UC')
-                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
-                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
-                                    <Text>{I18n.t('passwordRule1')}</Text>
+                <ScrollView style={styles.scrollView} scrollEnabled={false}>
+                    <View style={styles.logoContainer}>
+                        <Image source={require('../resourse/images/HealthKite.png')} style={styles.logoSmall} resizeMode='center' />
+                    </View>
+                    <Text style={styles.txtSignin}>{I18n.t('signup')}</Text>
+                    <View style={styles.form}>
+                        {this.state.inputSet.map((item, index) => {
+                            return (
+                                <View style={styles.inputContainer}>
+                                    {item.error &&
+                                        <Text style={styles.txtError}>{item.errorMsg}</Text>}
+                                    <Item regular style={styles.input} error={item.error}>
+                                        <Input
+                                            placeholder={item.placeholder}
+                                            returnKeyType={item.returnType}
+                                            onChangeText={(text) => this.onTextChange(text, index)}
+                                            value={this.state.inputSet[index].value}
+                                            textContentType={item.contentType}
+                                            keyboardType={item.keyboardType}
+                                            maxLength={item.maxLength}
+                                            blurOnSubmit={false}
+                                            secureTextEntry={item.secure && !item.show}
+                                            onFocus={this.onInputFocus.bind(this, index)}
+                                            onBlur={this.onInputBlur.bind(this, index)} />
+                                        {!item.secure
+                                            ? (<Icon name={item.icon} />)
+                                            : this.state.inputSet[index].show
+                                                ? <Icon name='ios-eye' onPress={this.toggleSecureInput.bind(this, index, true)} />
+                                                : <Icon name='ios-eye-off' onPress={this.toggleSecureInput.bind(this, index, false)} />}
+                                    </Item>
                                 </View>
-                                <View style={styles.rules}>
-                                    {this.checkPwd('LC')
-                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
-                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
-                                    <Text>{I18n.t('passwordRule2')}</Text>
-                                </View>
-                                <View style={styles.rules}>
-                                    {this.checkPwd('NO')
-                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
-                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
-                                    <Text>{I18n.t('passwordRule3')}</Text>
-                                </View>
-                                <View style={styles.rules}>
-                                    {this.checkPwd('LEN')
-                                        ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
-                                        : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
-                                    <Text>{I18n.t('passwordRule4')}</Text>
-                                </View>
-                            </Body>
-                        </CardItem>
-                    </Card>}
+                            );
+                        })}
+                        <Button iconRight block transparent onPress={this.signup.bind(this)} style={styles.btnRegister}>
+                            <Text>{I18n.t('signup')}</Text>
+                            <Icon name='ios-arrow-forward' />
+                        </Button>
+                        <Text style={styles.txtSignup}>{I18n.t('haveAccountMessage')}</Text>
+                        <Button transparent onPress={this.signin.bind(this)} style={styles.btnSignup}>
+                            <Text>{I18n.t('signinAct')}</Text>
+                        </Button>
+                    </View>
+                    {this.state.showHint &&
+                        <Card style={styles.pwdHint}>
+                            <CardItem header>
+                                <Text>{I18n.t('passwordIndicator')}</Text>
+                            </CardItem>
+                            <CardItem>
+                                <Body>
+                                    <View style={styles.rules}>
+                                        {this.checkPwd('UC')
+                                            ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                            : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                        <Text>{I18n.t('passwordRule1')}</Text>
+                                    </View>
+                                    <View style={styles.rules}>
+                                        {this.checkPwd('LC')
+                                            ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                            : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                        <Text>{I18n.t('passwordRule2')}</Text>
+                                    </View>
+                                    <View style={styles.rules}>
+                                        {this.checkPwd('NO')
+                                            ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                            : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                        <Text>{I18n.t('passwordRule3')}</Text>
+                                    </View>
+                                    <View style={styles.rules}>
+                                        {this.checkPwd('LEN')
+                                            ? <Icon name='ios-checkmark-circle' style={[styles.iconBefore, styles.iconOk]} />
+                                            : <Icon name='ios-close-circle' style={[styles.iconBefore, styles.iconError]} />}
+                                        <Text>{I18n.t('passwordRule4')}</Text>
+                                    </View>
+                                </Body>
+                            </CardItem>
+                        </Card>}
+                </ScrollView>
+                {this.state.loading &&
+                    <View style={styles.spinner}>
+                        <Spinner color='blue' />
+                    </View>}
             </Container>
         );
     }
@@ -231,7 +270,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'stretch',
         backgroundColor: Color.Eve
     },
     scrollView: {

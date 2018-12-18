@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { Container, Item, Input, Icon, Button, Text, View } from 'native-base';
+import { Container, Item, Input, Icon, Button, Text, View, Spinner } from 'native-base';
 import realm from '../js/realm';
 import I18n from '../js/i18n';
 import Color from '../js/color';
@@ -19,12 +19,13 @@ export default class SigninScreen extends React.Component {
             inputError: false,
             errorMsg: '',
             step1: true,
-            pwdHide: true
+            pwdHide: true,
+            loading: false
         };
     }
 
-    componentDidMount() {
-        Security.retrieveServerRsaPublicKey();
+    loading(loading) {
+        this.setState({loading: loading});
     }
 
     nextClick() {
@@ -33,6 +34,7 @@ export default class SigninScreen extends React.Component {
             this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.AccountNotEmpty });
             return;
         }
+        this.loading(true);
         let signinRequest = {
             userName: Security.rsaEncryptByServerKey(account),
             clientRsaPublicKey: Security.getLocalRsaPublicKey()
@@ -44,6 +46,7 @@ export default class SigninScreen extends React.Component {
             } else {
                 this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.UserNotFound });
             }
+            this.loading(false);
         });
     }
 
@@ -54,6 +57,7 @@ export default class SigninScreen extends React.Component {
             this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.PasswordNotEmpty });
             return;
         }
+        this.loading(true);
         password = Security.sha256(account, password);
         let signinRequest = {
             userName: Security.rsaEncryptByServerKey(account),
@@ -61,10 +65,12 @@ export default class SigninScreen extends React.Component {
         };
         Rest.signin(signinRequest).then(result => {
             console.log(Security.aesDecrypt(account, result));
+            this.loading(false);
         }).catch(e => {
             if (e == 'unauthorised') {
                 this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.PasswordNotCorrect });
             }
+            this.loading(false);
         });
     }
 
@@ -83,59 +89,64 @@ export default class SigninScreen extends React.Component {
     render() {
         return (
             <Container style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <Image source={require('../resourse/images/HealthKite.png')} style={styles.logo} resizeMode='center' />
-                </View>
-                <View style={styles.formContainer}>
-                    <Text style={styles.txtSignin}>{I18n.t('signin')}</Text>
-                    {this.state.step1
-                        ? (<View style={styles.form}>
-                            {this.state.inputError &&
-                                <Text style={styles.txtError}>{this.state.errorMsg}</Text>}
-                            <Item regular style={styles.input} error={this.state.inputError}>
-                                <Input
-                                    placeholder='Account'
-                                    returnKeyType='next'
-                                    onSubmitEditing={this.nextClick.bind(this)}
-                                    onChangeText={(text) => this.setState({ account: text, inputError: false })}
-                                    value={this.state.account}
-                                    textContentType='username'
-                                    keyboardType='email-address' />
+                <View style={styles.mainContainer}>
+                    <View style={styles.logoContainer}>
+                        <Image source={require('../resourse/images/HealthKite.png')} style={styles.logo} resizeMode='center' />
+                    </View>
+                    <View style={styles.formContainer}>
+                        <Text style={styles.txtSignin}>{I18n.t('signin')}</Text>
+                        {this.state.step1
+                            ? (<View style={styles.form}>
                                 {this.state.inputError &&
-                                    <Icon name='ios-close-circle' />}
-                            </Item>
-                            <Button iconRight transparent onPress={this.nextClick.bind(this)} style={styles.btnNext}>
-                                <Text>{I18n.t('next')}</Text>
-                                <Icon name='ios-arrow-forward' />
-                            </Button>
-                            <Text style={styles.txtSignup}>{I18n.t('noAccountMessage')}</Text>
-                            <Button transparent onPress={this.signup.bind(this)} style={styles.btnSignup}>
-                                <Text>{I18n.t('signupAct')}</Text>
-                            </Button>
-                        </View>)
-                        : (<FadeInView style={styles.form}>
-                            {this.state.inputError &&
-                                <Text style={styles.txtError}>{this.state.errorMsg}</Text>}
-                            <Item regular style={styles.input} error={this.state.inputError}>
-                                <Input
-                                    placeholder='Password'
-                                    returnKeyType='go'
-                                    onSubmitEditing={this.signin.bind(this)}
-                                    onChangeText={(text) => this.setState({ password: text, inputError: false })}
-                                    value={this.state.password}
-                                    textContentType='password'
-                                    secureTextEntry={this.state.pwdHide} />
-                                {this.state.pwdHide
-                                    ? <Icon name='ios-eye' onPress={this.togglePassword.bind(this, false)} />
-                                    : <Icon name='ios-eye-off' onPress={this.togglePassword.bind(this, true)} />}
-                            </Item>
-                            <Button iconRight transparent onPress={this.signin.bind(this)} style={styles.btnNext}>
-                                <Text>{I18n.t('go')}</Text>
-                                <Icon name='ios-arrow-forward' />
-                            </Button>
-                        </FadeInView>)}
-
+                                    <Text style={styles.txtError}>{this.state.errorMsg}</Text>}
+                                <Item regular style={styles.input} error={this.state.inputError}>
+                                    <Input
+                                        placeholder='Account'
+                                        returnKeyType='next'
+                                        onSubmitEditing={this.nextClick.bind(this)}
+                                        onChangeText={(text) => this.setState({ account: text, inputError: false })}
+                                        value={this.state.account}
+                                        textContentType='username'
+                                        keyboardType='email-address' />
+                                    {this.state.inputError &&
+                                        <Icon name='ios-close-circle' />}
+                                </Item>
+                                <Button iconRight transparent onPress={this.nextClick.bind(this)} style={styles.btnNext}>
+                                    <Text>{I18n.t('next')}</Text>
+                                    <Icon name='ios-arrow-forward' />
+                                </Button>
+                                <Text style={styles.txtSignup}>{I18n.t('noAccountMessage')}</Text>
+                                <Button transparent onPress={this.signup.bind(this)} style={styles.btnSignup}>
+                                    <Text>{I18n.t('signupAct')}</Text>
+                                </Button>
+                            </View>)
+                            : (<FadeInView style={styles.form}>
+                                {this.state.inputError &&
+                                    <Text style={styles.txtError}>{this.state.errorMsg}</Text>}
+                                <Item regular style={styles.input} error={this.state.inputError}>
+                                    <Input
+                                        placeholder='Password'
+                                        returnKeyType='go'
+                                        onSubmitEditing={this.signin.bind(this)}
+                                        onChangeText={(text) => this.setState({ password: text, inputError: false })}
+                                        value={this.state.password}
+                                        textContentType='password'
+                                        secureTextEntry={this.state.pwdHide} />
+                                    {this.state.pwdHide
+                                        ? <Icon name='ios-eye' onPress={this.togglePassword.bind(this, false)} />
+                                        : <Icon name='ios-eye-off' onPress={this.togglePassword.bind(this, true)} />}
+                                </Item>
+                                <Button iconRight transparent onPress={this.signin.bind(this)} style={styles.btnNext}>
+                                    <Text>{I18n.t('go')}</Text>
+                                    <Icon name='ios-arrow-forward' />
+                                </Button>
+                            </FadeInView>)}
+                    </View>
                 </View>
+                {this.state.loading &&
+                    <View style={styles.spinner}>
+                        <Spinner color='blue' />
+                    </View>}
             </Container>
         );
     }
@@ -144,9 +155,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'stretch',
         justifyContent: 'center',
         backgroundColor: Color.Eve
+    },
+    mainContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     form: {
         textAlign: 'center',
@@ -190,5 +207,16 @@ const styles = StyleSheet.create({
     formContainer: {
         flex: 0.5,
         justifyContent: 'flex-start',
+    },
+    spinner: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        backgroundColor: Color.White,
+        opacity: 0.2,
+        alignSelf: 'stretch',
+        width: '100%',
+        height: '100%'
     }
 });

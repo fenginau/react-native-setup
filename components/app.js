@@ -5,6 +5,7 @@ import { Root } from "native-base";
 import firebase, { RemoteMessage } from 'react-native-firebase';
 import Global from '../js/global';
 import NavigationService from '../js/navigationservice';
+import Security from '../js/security';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -55,6 +56,9 @@ export default class App extends React.Component {
                     break;
             }
         });
+
+        // get server public RSA key
+        Security.retrieveServerRsaPublicKey();
     }
 
     componentWillUnmount() {
