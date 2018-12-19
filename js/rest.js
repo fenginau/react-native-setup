@@ -45,7 +45,18 @@ export default class Rest extends React.Component {
                 'Content-Type': 'application/json',
                 // 'Authorization': Global.getBase64Auth()
             }
-        }).then((response) => response.json());
+        }).then(response => {
+            console.log(response);
+            if (response.status == 200 || response.status == 201) {
+                return response.json();
+            } else if (response.status == 401) {
+                throw 'unauthorised';
+            } else if (response.status == 422) {
+                throw 'duplicate';
+            } else {
+                throw 'server error';
+            }
+        });
     }
 
     static post2(url, body) {
@@ -87,7 +98,11 @@ export default class Rest extends React.Component {
     static signup(request) {
         return this.post2('user/createuser', request);
     }
-    
+
+    static checkUserExist(account) {
+        return this.get2(`user/checkuserexist?user=${account}`);
+    }
+
 
     // api
     static getKbMenu() {
@@ -112,7 +127,7 @@ export default class Rest extends React.Component {
 
     static getTwilioToken() {
         console.log(Global.deviceModel);
-        return this.get(`callapi/getTwilioVideoToken/${Global.hardwareId}/${Global.hardwareId+Global.deviceModel}?${new Date().getTime()}`);
+        return this.get(`callapi/getTwilioVideoToken/${Global.hardwareId}/${Global.hardwareId + Global.deviceModel}?${new Date().getTime()}`);
     }
 
     //old
@@ -140,7 +155,7 @@ export default class Rest extends React.Component {
                 'Content-Type': 'application/json',
                 'Authorization': 'key=AAAAYD651D0:APA91bGa0ZDxdyDYS8VZYs7LDcVjgEohnXGmI5inQqOBFD5eUNrcFJkxm5-lE4tI5Tgxn7KKenin7rN4bYUiS_0MXXfR8HTazF2-0dHx-kFByf4mA49jxZCc1X5XdM7uPhbfzEFZ28g56Wb21zvSs8bjPuUx_Q0_Hg'
             },
-            body: JSON.stringify({to: message.target, data: message})
+            body: JSON.stringify({ to: message.target, data: message })
         }).then((response) => response.json());
     }
 }

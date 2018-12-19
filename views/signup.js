@@ -29,7 +29,7 @@ export default class SignupScreen extends React.Component {
     }
 
     loading(loading) {
-        this.setState({loading: loading});
+        this.setState({ loading: loading });
     }
 
     setForm() {
@@ -107,15 +107,21 @@ export default class SignupScreen extends React.Component {
         });
         this.setState({ inputSet });
         if (valid) {
+            this.loading(true);
             for (let key in signipRequest) {
                 signipRequest[key] = Security.rsaEncryptByServerKey(signipRequest[key]);
             }
             Rest.signup(signipRequest).then(result => {
+                this.loading(false);
                 console.log(result);
             }).catch(e => {
                 if (e == 'duplicate') {
-                    // do
+                    let inputSet = this.state.inputSet;
+                    inputSet[0].errorMsg = I18n.t('duplicateUser');
+                    inputSet[0].error = true;
+                    this.setState({ inputSet });
                 }
+                this.loading(false);
             });
         }
     }
@@ -155,9 +161,32 @@ export default class SignupScreen extends React.Component {
                 break;
             case 'email':
                 inputSet[index].error = !Utils.isEmail(inputSet[index].value);
+                inputSet[index].errorMsg = I18n.t('invalidEmail');
                 this.setState({ inputSet });
+                if (!inputSet[index].error) {
+                    this.checkUserExist(inputSet[index].value).then(exist => {
+                        if (exist) {
+                            inputSet[index].errorMsg = I18n.t('duplicateUser');
+                            inputSet[index].error = true;
+                            this.setState({ inputSet });
+                        }
+                    });
+                }
                 break;
         }
+    }
+
+    checkUserExist(account) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                Rest.checkUserExist(account).then(result => {
+                    console.log(result);
+                    resolve(result);
+                });
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 
     checkPwd(rule) {

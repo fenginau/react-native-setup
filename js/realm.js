@@ -21,6 +21,15 @@ const UserSecuritySchema = {
     }
 }
 
+const JwtSchema = {
+    name: 'Jwt',
+    primaryKey: 'ac',
+    properties: {
+        ac: 'int',
+        token: 'string'        
+    }
+}
+
 // old
 const InfoSimpleSchema = {
     name: 'InfoSimple',
@@ -69,6 +78,7 @@ let realm = new Realm({
     schema: [
         RsaKeySchema,
         UserSecuritySchema,
+        JwtSchema,
         InfoSimpleSchema,
         InfoDetailSchema,
         InfoImageStoreSchema,

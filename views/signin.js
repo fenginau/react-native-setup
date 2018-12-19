@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Alert } from 'react-native';
 import { Container, Item, Input, Icon, Button, Text, View, Spinner } from 'native-base';
 import realm from '../js/realm';
 import I18n from '../js/i18n';
@@ -25,7 +25,7 @@ export default class SigninScreen extends React.Component {
     }
 
     loading(loading) {
-        this.setState({loading: loading});
+        this.setState({ loading });
     }
 
     nextClick() {
@@ -64,8 +64,14 @@ export default class SigninScreen extends React.Component {
             password: Security.rsaEncryptByUserKey(account, password)
         };
         Rest.signin(signinRequest).then(result => {
-            console.log(Security.aesDecrypt(account, result));
-            this.loading(false);
+            Security.saveJwt(Security.aesDecrypt(account, result)).then(() => {
+                this.loading(false);
+                Alert.alert('You have signed in.');
+                console.log(Security.getJwt());
+            }).catch(err => {
+                console.error(err);
+                this.loading(false);
+            });
         }).catch(e => {
             if (e == 'unauthorised') {
                 this.setState({ inputError: true, errorMsg: Dictionary.errorMsg.PasswordNotCorrect });

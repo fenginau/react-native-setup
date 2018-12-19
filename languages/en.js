@@ -42,6 +42,7 @@ export default {
     signup: 'Sign Up',
     invalidEmail: 'This is not a valid email.',
     invalidPassword: 'Password does not follow the rule.',
+    duplicateUser: 'This email already exists.',
     emptyField: '$1 cannot be empty.',
     email: 'Email',
     name: 'Name',

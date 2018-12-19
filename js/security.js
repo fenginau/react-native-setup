@@ -18,6 +18,7 @@ export default class Security extends React.Component {
     }
 
     static retrieveServerRsaPublicKey() {
+        LocalDB.clearALL();
         Rest.getServerRsaPublicKey().then(result => {
             LocalDB.save('RsaKey', { type: this.rsaKeyType.ServerPublic, key: result });
         }).catch(e => {
@@ -199,4 +200,18 @@ export default class Security extends React.Component {
         return CryptoJS.SHA256(text).toString(CryptoJS.enc.Base64);
     }
 
+    static saveJwt(jwt) {
+        return LocalDB.save('Jwt', { ac: 1, token: jwt }, true);
+    }
+
+    static getJwt() {
+        try {
+            let jwt = LocalDB.getItemById('Jwt', 'ac', 1);
+            console.log(jwt);
+            console.log(LocalDB.getJwt());
+        } catch (e) {
+            console.error('Failed to get JWT token.');
+            console.error(e);
+        }
+    }
 }
