@@ -132,6 +132,27 @@ const RootStack = createBottomTabNavigator({
             // don't change tabBarComponent here - it works on iOS after all.
         });
 
+
+
+const AuthNavigator = createStackNavigator(
+    {
+        Signin: {
+            screen: SigninScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        Signup: {
+            screen: SignupScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        }
+    },
+    {
+        initialRouteName: 'Signin'
+    });
+
 const Navigator = createStackNavigator({
     Main: {
         screen: RootStack,
@@ -174,25 +195,12 @@ const Navigator = createStackNavigator({
         navigationOptions: () => ({
             header: null
         })
+    },
+    Auth: {
+        screen: AuthNavigator,
+        navigationOptions: () => ({
+            header: null
+        })
     }
 });
-
-const AuthNavigator = createStackNavigator(
-    {
-        Signin: {
-            screen: SigninScreen,
-            navigationOptions: () => ({
-                header: null
-            })
-        },
-        Signup: {
-            screen: SignupScreen,
-            navigationOptions: () => ({
-                header: null
-            })
-        }
-    },
-    {
-        initialRouteName: 'Signin'
-    });
 export { Navigator, AuthNavigator };

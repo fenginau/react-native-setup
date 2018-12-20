@@ -1,5 +1,6 @@
 import React from 'react';
 import Global from './global';
+import Security from './security';
 
 export default class Rest extends React.Component {
     static get(url) {
@@ -43,7 +44,7 @@ export default class Rest extends React.Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                // 'Authorization': Global.getBase64Auth()
+                'Authorization': Security.getJwt()
             }
         }).then(response => {
             console.log(response);
@@ -65,7 +66,7 @@ export default class Rest extends React.Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                // 'Authorization': Global.getBase64Auth()
+                'Authorization': Security.getJwt()
             },
             body: JSON.stringify(body)
         }).then(response => {

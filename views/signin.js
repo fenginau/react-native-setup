@@ -35,10 +35,13 @@ export default class SigninScreen extends React.Component {
             return;
         }
         this.loading(true);
+
+        let username = Security.rsaEncryptByServerKey(account);
         let signinRequest = {
-            userName: Security.rsaEncryptByServerKey(account),
+            userName: username,
             clientRsaPublicKey: Security.getLocalRsaPublicKey()
         }
+
         Rest.requestSignin(signinRequest).then(result => {
             if (typeof result == 'object' && result.userRsaPublicKey != null) {
                 Security.saveUserSecurityKeys(account, result);
@@ -67,7 +70,6 @@ export default class SigninScreen extends React.Component {
             Security.saveJwt(Security.aesDecrypt(account, result)).then(() => {
                 this.loading(false);
                 Alert.alert('You have signed in.');
-                console.log(Security.getJwt());
             }).catch(err => {
                 console.error(err);
                 this.loading(false);

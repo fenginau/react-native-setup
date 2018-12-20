@@ -44,10 +44,6 @@ export default class LocalDB extends React.Component {
         return realm.objects(name).filtered(`${idName} = "${id}"`);
     }
 
-    static getJwt() {
-        return realm.objects('Jwt').filtered(`id = 1`);
-    }
-
     static clearALL() {
         realm.write(() => {
             realm.deleteAll();

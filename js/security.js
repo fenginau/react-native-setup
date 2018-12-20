@@ -8,17 +8,23 @@ import CryptoJS from 'crypto-js';
 export default class Security extends React.Component {
     static rsaKeyType = Dictionary.rsaKeyType;
     static generateLocalRsaKey() {
+        let pkList = LocalDB.getItemById('RsaKey', 'type', Dictionary.rsaKeyType.ClientPublic);
+        if (pkList.length > 0) {
+            return;
+        }
         let encrypt = new JSEncrypt({ default_key_size: 2048 });
         let publicKey = encrypt.getPublicKey();
         let privateKey = encrypt.getPrivateKey();
         LocalDB.saveList('RsaKey', [
-            { type: this.rsaKeyType.ClientPublic, key: publicKey },
-            { type: this.rsaKeyType.ClientPrivate, key: privateKey }
-        ]);
+            { type: Dictionary.rsaKeyType.ClientPublic, key: publicKey },
+            { type: Dictionary.rsaKeyType.ClientPrivate, key: privateKey }
+        ]).then(() => {
+            console.log('RSA local key pair has been generated.');
+        });
     }
 
     static retrieveServerRsaPublicKey() {
-        LocalDB.clearALL();
+        // LocalDB.clearALL();
         Rest.getServerRsaPublicKey().then(result => {
             LocalDB.save('RsaKey', { type: this.rsaKeyType.ServerPublic, key: result });
         }).catch(e => {
@@ -132,14 +138,6 @@ export default class Security extends React.Component {
         }
     }
 
-    static requestSignin() {
-        let localPublicKey = this.getLocalRsaPublicKey();
-        let localPrivateKey = this.getLocalRsaPrivateKey();
-        if (localPublicKey == null || localPrivateKey == null) {
-            this.generateLocalRsaKey();
-        }
-    }
-
     static rsaEncryptByServerKey(plainText) {
         let key = this.getServerRsaPublicKey();
         if (key != null) {
@@ -207,8 +205,11 @@ export default class Security extends React.Component {
     static getJwt() {
         try {
             let jwt = LocalDB.getItemById('Jwt', 'ac', 1);
-            console.log(jwt);
-            console.log(LocalDB.getJwt());
+            if (jwt.length > 0) {
+                return `Bearer ${jwt[0].token}`
+            } else {
+                return '';
+            }
         } catch (e) {
             console.error('Failed to get JWT token.');
             console.error(e);

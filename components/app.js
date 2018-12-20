@@ -6,12 +6,13 @@ import firebase, { RemoteMessage } from 'react-native-firebase';
 import Global from '../js/global';
 import NavigationService from '../js/navigationservice';
 import Security from '../js/security';
+import Utils from '../js/utils';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorised: false,
+            authorised: true,
         };
     }
     componentDidMount() {
@@ -59,6 +60,7 @@ export default class App extends React.Component {
 
         // get server public RSA key
         Security.retrieveServerRsaPublicKey();
+        Utils.executeAsync(Security.generateLocalRsaKey);
     }
 
     componentWillUnmount() {
