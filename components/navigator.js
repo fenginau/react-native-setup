@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import HomeScreen from '../views/home';
+import SearchScreen from '../views/search';
 import KnowledgeBaseScreen from '../views/knowledgebase';
 import KnowledgebaseItemScreen from '../views/knowledgebaseitem';
 import SettingScreen from '../views/setting';
@@ -68,9 +69,29 @@ const CameraStack = createStackNavigator(
         initialRouteName: 'Camera'
     });
 
+const SearchStack = createStackNavigator(
+    {
+        SearchHome: {
+            screen: HomeScreen,
+            navigationOptions: () => ({
+                header: null
+            })
+        },
+        SearchDetail: {
+            screen: SearchScreen,
+            navigationOptions: () => ({
+                header: null
+            }),
+        },
+    },
+    {
+        initialRouteName: 'SearchHome'
+    });
+
+
 const RootStack = createBottomTabNavigator({
     Home: {
-        screen: HomeScreen,
+        screen: SearchStack,
         navigationOptions: ({ navigation }) => ({
             title: I18n.t('search'),
             tabBarIcon: ({ focused, tintColor }) => {

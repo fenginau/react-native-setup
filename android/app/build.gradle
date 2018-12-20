@@ -1,8 +1,8 @@
 apply plugin: "com.android.application"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-//project.ext.vectoricons = [
-//    iconFontNames: [ 'FontAwesome.ttf', 'Ionicons.ttf', 'Entypo.ttf', 'EvilIcons.ttf', 'Feather.ttf' ]
-//]
+project.ext.vectoricons = [
+    iconFontNames: [ 'FontAwesome.ttf', 'Ionicons.ttf', 'Entypo.ttf', 'EvilIcons.ttf', 'Feather.ttf' ]
+]
 import com.android.build.OutputFile
 
 /**

@@ -66,7 +66,7 @@ export default class HomeScreen extends React.Component {
     }
 
     search() {
-        console.log('search submitted');
+        this.props.navigation.navigate('Signup', {subjects: this.state.text});
     }
 
     subjectClick(item) {
