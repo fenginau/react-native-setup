@@ -1,10 +1,15 @@
 import React from 'react';
 import { DeviceEventEmitter } from 'react-native';
+import { StyleProvider } from 'native-base';
 import Navigator from './navigator';
 import { Root } from "native-base";
 import firebase, { RemoteMessage } from 'react-native-firebase';
 import Global from '../js/global';
 import NavigationService from '../js/navigationservice';
+import getTheme from '../native-base-theme/components';
+import material from '../native-base-theme/variables/material';
+// import platform from '../native-base-theme/variables/platform';
+// import commonColor from '../native-base-theme/variables/commonColor';
 
 export default class App extends React.Component {
     componentDidMount() {
@@ -58,9 +63,11 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <Root>
-                <Navigator ref={ref => NavigationService.setTopLevelNavigator(ref)} />
-            </Root>
+            <StyleProvider style={getTheme(material)}>
+                <Root>
+                    <Navigator ref={ref => NavigationService.setTopLevelNavigator(ref)} />
+                </Root>
+            </StyleProvider>
         );
     }
 }
